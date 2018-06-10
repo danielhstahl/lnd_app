@@ -8,10 +8,12 @@ const express = require('express')
 const {endpoints}=require('./setupEndpoints')
 const exec=promisify(child_process.exec)
 const bodyParser = require('body-parser')
+var cors = require('cors')
 const app = express()
 const expressWs = require('express-ws')(app)
 
 app.use(bodyParser.json())
+app.use(cors())
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server started`);

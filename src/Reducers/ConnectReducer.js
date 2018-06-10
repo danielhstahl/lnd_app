@@ -1,7 +1,8 @@
 import { 
     ATTEMPT_CONNECT, 
     CONNECT_FAILED 
-} from '../Actions/actionsDefinitions'
+} from '../Actions/actionDefinitions'
+import {combineReducers} from 'redux'
 
 const boolReducerGenerator=type=>(state=false, action)=>{
     switch(action.type){
