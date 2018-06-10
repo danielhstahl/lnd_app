@@ -4,7 +4,8 @@
   "description": "Server to facilitate communication with outside world",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production node index"
   },
   "keywords": [
     "lnd",
@@ -14,7 +15,9 @@
   "author": "Daniel Stahl",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "express-ws": "^4.0.0",
     "fs-extra": "^6.0.1",
     "grpc": "^1.12.2"
   }

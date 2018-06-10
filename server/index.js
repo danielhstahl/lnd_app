@@ -4,13 +4,25 @@ const {promisify}=require('util')
 const grpc = require('grpc')
 const {homedir}=require('os')
 const path=require('path')
-process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
-const exec=promisify(child_process.exec)
 const express = require('express')
+const {endpoints}=require('./setupEndpoints')
+const exec=promisify(child_process.exec)
+const bodyParser = require('body-parser')
 const app = express()
-const pathToLnd=process.env.NODE_ENV==='production'?path.resolve(homedir(), '.lnd'):path.basename(__dirname)
+const expressWs = require('express-ws')(app)
+
+app.use(bodyParser.json())
+
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server started`);
+})
+
+process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
+
+const pathToLnd=process.env.NODE_ENV==='production'?path.resolve(homedir(), '.lnd'):__dirname
+
+
 const pathOnNetwork=process.env.NODE_ENV==='production'?'localhost':process.env.IP
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
 Promise.all([
     fs.realpath(path.resolve(pathToLnd, 'admin.macaroon'))
         .then(path=>fs.readFile(path))
@@ -32,21 +44,9 @@ Promise.all([
 ]).then(([macaroonCreds, sslCreds, _])=>{
     return grpc.credentials.combineChannelCredentials(sslCreds, macaroonCreds)
 }).then(credentials=>{
-
     const {lnrpc} = grpc.load('rpc.proto')
     const client = new lnrpc.Lightning(`${pathOnNetwork}:10009`, credentials)
-    app.get('/info', (_, res) => {
-        client.getInfo({}, (err, info) => {
-            if(err){
-                console.log(err)
-                res.send(JSON.stringify({err}))
-            }
-            else{
-                res.send(info)
-            }
-        })
-    })
-
+    endpoints(client, app)
     return fs.remove('./rpc.proto')
 }).catch(err=>{
     console.log(err)
