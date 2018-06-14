@@ -1,8 +1,7 @@
 import { 
-    ENTER_WALLET_PASSWORD, 
-    ENTER_IP 
+    ENTER_SIGN_IN 
 } from '../Actions/actionDefinitions'
-import {combineReducers} from 'redux'
+/*
 const textReducerGenerator=(type, defaultState)=>(state=defaultState, action)=>{
     switch(action.type){
         case type:
@@ -17,4 +16,13 @@ const ip=textReducerGenerator(ENTER_IP, localStorage.getItem('ipAddress'))
 export default combineReducers({
     password,
     ip
-})
+})*/
+
+export default (state={}, action)=>{
+    switch(action.type){
+        case ENTER_SIGN_IN:
+            return {...state, [action.key]:action.value}
+        default:
+            return state
+    }
+}

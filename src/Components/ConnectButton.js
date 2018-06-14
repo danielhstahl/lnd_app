@@ -8,12 +8,10 @@ export const ConnectButton=({
     handleConnect,
     isConnecting,
     children,
-    ipAddress,
-    walletPassword,
     ...rest
 })=>isConnecting?
     <CircularProgress/>:
-    <Button {...rest} onClick={handleConnect({ipAddress, walletPassword})}>
+    <Button {...rest} onClick={handleConnect(rest)}>
         {children}
     </Button>
 
@@ -23,8 +21,7 @@ ConnectButton.propTypes={
 
 const mapStateToProps=({signin, connection})=>({
     isConnecting:connection.isConnecting,
-    ipAddress:signin.ip,
-    walletPassword:signin.password
+    ...signin
 })
 const mapDispatchToProps=dispatch=>({
     handleConnect:getConnectionInformation(dispatch)

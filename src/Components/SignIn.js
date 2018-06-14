@@ -9,42 +9,109 @@ import TextField from '@material-ui/core/TextField'
 import ConnectButton from './ConnectButton'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
-import {updatePassword, updateIP} from '../Actions/signInActions'
+import {
+  Route
+} from 'react-router-dom'
+import {updateSignIn} from '../Actions/signInActions'
+import {IP_KEY, PORT_KEY, MACAROON_KEY, TLS_KEY, PASSWORD_KEY} from './signInDefinitions'
+
+const OnlyLightningNodeInfo=({signin, updateSignIn})=>[
+    <TextField
+        autoFocus
+        key={IP_KEY}
+        margin="dense"
+        value={signin[IP_KEY]}
+        onChange={updateSignIn(IP_KEY)}
+        label="IP Address"
+        type="text"
+        fullWidth
+    />,
+    <TextField
+        key={PORT_KEY}
+        margin="dense"
+        value={signin[PORT_KEY]}
+        onChange={updateSignIn(PORT_KEY)}
+        label="Port"
+        type="text"
+        fullWidth
+    />,
+    <TextField
+        key={MACAROON_KEY}
+        margin="dense"
+        value={signin[MACAROON_KEY]}
+        onChange={updateSignIn(MACAROON_KEY)}
+        label="Macaroon"
+        type="text"
+        fullWidth
+    />,
+    <TextField
+        key={TLS_KEY}
+        margin="dense"
+        value={signin[TLS_KEY]}
+        onChange={updateSignIn(TLS_KEY)}
+        label="TLS"
+        type="text"
+        fullWidth
+    />
+]
+const FirstTimeRender=({signin, updateSignIn})=>[
+    <DialogContentText key='contentHead'>
+        Enter your IP, port, macaroon, and TLS key.  These are stored in local storage, so add a password for encryption.
+    </DialogContentText>,
+    <OnlyLightningNodeInfo 
+        key='nodeInfo'
+        signin={signin} 
+        updateSignIn={updateSignIn}
+    />,
+    <TextField
+        key='passKey'
+        margin="dense"
+        value={signin[PASSWORD_KEY]}
+        onChange={updateSignIn(PASSWORD_KEY)}
+        label="Password"
+        type="password"
+        fullWidth
+    />
+]
+
+const OnlyPassword=({signin, updateSignIn})=>[
+    <DialogContentText key='contentHead'>
+        Enter password to access site
+    </DialogContentText>,
+    <TextField
+        key='passKey'
+        margin="dense"
+        value={signin[PASSWORD_KEY]}
+        onChange={updateSignIn(PASSWORD_KEY)}
+        label="Password"
+        type="password"
+        fullWidth
+    />
+]
 export const SignIn=({
-    ipAddress, 
-    walletPassword, 
     history,
-    updatePassword,
-    updateIP
+    updateSignIn,
+    match,
+    ...signin
 })=>(
     <Dialog
         open={true}
         onClose={history.goBack}
         aria-labelledby="form-dialog-title"
     >
-        <DialogTitle id="form-dialog-title">Connect to Lightning Node</DialogTitle>
+        <DialogTitle id="form-dialog-title">Provide Lightning Node Credentials</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    Enter your (external) IP address and wallet password.  If your server is not on port 80 then add the port to the IP address.  We do not track or keep passwords.  
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="ipaddress"
-                    value={ipAddress}
-                    onChange={updateIP}
-                    label="IP Address"
-                    type="text"
-                    fullWidth
+                <Route 
+                    path='/signin/firsttime'
+                    render={()=><FirstTimeRender signin={signin} updateSignIn={updateSignIn}/>}
                 />
-                <TextField
-                    margin="dense"
-                    value={walletPassword}
-                    id="walletpassword"
-                    onChange={updatePassword}
-                    label="Wallet Password"
-                    type="password"
-                    fullWidth
+                <Route 
+                    path='/signin/password'
+                    render={()=><OnlyPassword signin={signin} updateSignIn={updateSignIn}/>}
+                />
+                <Route 
+                    path='/signin/updatewallet'
+                    render={()=><OnlyLightningNodeInfo signin={signin} updateSignIn={updateSignIn}/>}
                 />
             </DialogContent>
             <DialogActions>
@@ -58,22 +125,20 @@ export const SignIn=({
     </Dialog>
 )
 SignIn.propTypes={
-    ipAddress:PropTypes.string.isRequired,
-    walletPassword:PropTypes.string.isRequired,
+    [IP_KEY]:PropTypes.string.isRequired,
+    [PORT_KEY]:PropTypes.string.isRequired,
+    [MACAROON_KEY]:PropTypes.string.isRequired,
+    [TLS_KEY]:PropTypes.string.isRequired,
+    [PASSWORD_KEY]:PropTypes.string.isRequired,
     history:PropTypes.shape({
         goBack:PropTypes.func.isRequired
     }).isRequired,
-    updatePassword:PropTypes.func.isRequired,
-    updateIP:PropTypes.func.isRequired,
+    updateSignIn:PropTypes.func.isRequired
 }
 
-const mapStateToProps=({signin})=>({
-    ipAddress:signin.ip,
-    walletPassword:signin.password
-})
+const mapStateToProps=({signin})=>signin
 const mapDispatchToProps=dispatch=>({
-    updatePassword:updatePassword(dispatch),
-    updateIP:updateIP(dispatch)
+    updateSignIn:updateSignIn(dispatch)
 })
 export default connect(
     mapStateToProps,

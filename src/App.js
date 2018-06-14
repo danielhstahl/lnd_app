@@ -6,10 +6,9 @@ import {
 } from 'react-router-dom'
 import SignIn from './Components/SignIn'
 //import ConnectionAlerts from './Components/ConnectionAlerts'
-
 export default ()=>(
   <div className="App">
-    <Route exact path="/" render={({history})=><Button onClick={()=>history.push('/signin')}>Sign in</Button>}/>
-    <Route path="/signin" component={SignIn}/>
+    <Route path="/" component={SignIn}/>
   </div>
 )
+/*<Route exact path="/" render={({history})=><Button onClick={()=>history.push('/signin')}>Sign in</Button>}/>*/

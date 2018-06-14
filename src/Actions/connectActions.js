@@ -1,13 +1,17 @@
 import {ATTEMPT_CONNECT, CONNECT_FAILED} from './actionDefinitions'
-process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
-export const getConnectionInformation=dispatch=>({ipAddress, walletPassword})=>()=>{
+import {crypto} from 'crypto'
+
+export const getConnectionInformation=dispatch=>({password, ...rest})=>()=>{
     dispatch({
         type:ATTEMPT_CONNECT,
         value:true
     })
-    localStorage.setItem('ipAddress', ipAddress)
-    localStorage.setItem('walletPassword', walletPassword)
-    fetch(`http://${ipAddress}/info`).then(res=>res.json()).then(res=>{
+    const cipher = crypto.createCipher('aes192', password)
+    Object.entries(rest).forEach(([key, value])=>{
+        localStorage.setItem(key, cipher.update(value, 'utf8', 'hex')+cipher.final('hex'))
+    })
+    const {ip, port}=rest
+    fetch(`http://${ip}:${port}/v1/getInfo`).then(res=>res.json()).then(res=>{
         console.log(res)
     }).catch(err=>{
         console.log(err)
