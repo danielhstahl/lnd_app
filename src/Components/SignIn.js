@@ -1,19 +1,24 @@
 import React from 'react'
 import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
 import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
 import ConnectButton from './ConnectButton'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
 import {
   Route
 } from 'react-router-dom'
+import { withStyles } from '@material-ui/core/styles'
 import {updateSignIn} from '../Actions/signInActions'
-import {IP_KEY, PORT_KEY, MACAROON_KEY, TLS_KEY, PASSWORD_KEY} from './signInDefinitions'
+import {signInKeys} from './signInDefinitions'
+/*import {IP_KEY, PORT_KEY, MACAROON_KEY, TLS_KEY, PASSWORD_KEY} from './signInDefinitions'*/
+import Grid from '@material-ui/core/Grid'
+const {IP_KEY, PORT_KEY, MACAROON_KEY, TLS_KEY, PASSWORD_KEY}=signInKeys
+const signInKeysArray=Object.entries(signInKeys)
+const notAllItemsExist=items=>!signInKeysArray.reduce((aggr, [key, value])=>aggr&&items[value])
 
 const OnlyLightningNodeInfo=({signin, updateSignIn})=>[
     <TextField
@@ -55,9 +60,9 @@ const OnlyLightningNodeInfo=({signin, updateSignIn})=>[
     />
 ]
 const FirstTimeRender=({signin, updateSignIn})=>[
-    <DialogContentText key='contentHead'>
+    <Typography color="textSecondary" key='contentHead'>
         Enter your IP, port, macaroon, and TLS key.  These are stored in local storage, so add a password for encryption.
-    </DialogContentText>,
+    </Typography>,
     <OnlyLightningNodeInfo 
         key='nodeInfo'
         signin={signin} 
@@ -75,9 +80,9 @@ const FirstTimeRender=({signin, updateSignIn})=>[
 ]
 
 const OnlyPassword=({signin, updateSignIn})=>[
-    <DialogContentText key='contentHead'>
-        Enter password to access site
-    </DialogContentText>,
+    <Typography color="textSecondary" key='contentHead'>
+            Enter Password to connect to Node
+    </Typography>,
     <TextField
         key='passKey'
         margin="dense"
@@ -88,19 +93,29 @@ const OnlyPassword=({signin, updateSignIn})=>[
         fullWidth
     />
 ]
-export const SignIn=({
-    history,
+const styles = theme => ({
+    card: {
+      padding: theme.spacing.unit * 2,
+      width:500
+      //textAlign: 'center',
+      //color: theme.palette.text.secondary,
+    },
+    button:{
+        float:'right',
+        padding: theme.spacing.unit * 2
+    }
+})
+export const SignIn=withStyles(styles)(({
     updateSignIn,
     match,
+    classes,
     ...signin
 })=>(
-    <Dialog
-        open={true}
-        onClose={history.goBack}
-        aria-labelledby="form-dialog-title"
-    >
-        <DialogTitle id="form-dialog-title">Provide Lightning Node Credentials</DialogTitle>
-            <DialogContent>
+    <Grid container xs={12} justify="center">
+        <Card
+            className={classes.card}
+        >
+            <CardContent>
                 <Route 
                     path='/signin/firsttime'
                     render={()=><FirstTimeRender signin={signin} updateSignIn={updateSignIn}/>}
@@ -113,17 +128,18 @@ export const SignIn=({
                     path='/signin/updatewallet'
                     render={()=><OnlyLightningNodeInfo signin={signin} updateSignIn={updateSignIn}/>}
                 />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={history.goBack} color="primary">
-                    Cancel
-                </Button>
-                <ConnectButton color="primary">
+            </CardContent>
+            <CardActions>
+                <ConnectButton 
+                    variant="contained" color="primary"
+                    disabled={notAllItemsExist(signin)}
+                >
                     Connect
                 </ConnectButton>
-        </DialogActions>
-    </Dialog>
-)
+            </CardActions>
+        </Card>
+    </Grid>
+))
 SignIn.propTypes={
     [IP_KEY]:PropTypes.string.isRequired,
     [PORT_KEY]:PropTypes.string.isRequired,

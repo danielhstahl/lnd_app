@@ -1,5 +1,9 @@
-import {ATTEMPT_CONNECT, CONNECT_FAILED} from './actionDefinitions'
-import {crypto} from 'crypto'
+import {
+    ATTEMPT_CONNECT, 
+    CONNECT_FAILED
+} from './actionDefinitions'
+import crypto from 'crypto'
+import {signInKeys} from '../Components/signInDefinitions'
 
 export const getConnectionInformation=dispatch=>({password, ...rest})=>()=>{
     dispatch({
@@ -8,13 +12,23 @@ export const getConnectionInformation=dispatch=>({password, ...rest})=>()=>{
     })
     const cipher = crypto.createCipher('aes192', password)
     Object.entries(rest).forEach(([key, value])=>{
-        localStorage.setItem(key, cipher.update(value, 'utf8', 'hex')+cipher.final('hex'))
+        if(signInKeys[key]){
+            localStorage.setItem(key, cipher.update(value, 'utf8', 'hex')+cipher.final('hex'))
+        }
     })
     const {ip, port}=rest
     fetch(`http://${ip}:${port}/v1/getInfo`).then(res=>res.json()).then(res=>{
         console.log(res)
     }).catch(err=>{
         console.log(err)
+    })
+    dispatch({
+        type:ATTEMPT_CONNECT,
+        value:false
+    })
+    dispatch({
+        type:CONNECT_FAILED,
+        value:false
     })
     //connect to gRPC of light wallet here
     /*fetch({url:`${ipAddress}/unlock_wallet`, type:'POST', body:{wallet_password:walletPassword}}).then(res=>res.json()).then(res=>{
