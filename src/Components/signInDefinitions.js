@@ -2,7 +2,6 @@ export const signInKeys= {
     IP_KEY:'ip',
     PORT_KEY:'port',
     MACAROON_KEY:'macaroon',
-    TLS_KEY:'tls',
     PASSWORD_KEY:'password'
 }/*
 export const IP_KEY='ip'

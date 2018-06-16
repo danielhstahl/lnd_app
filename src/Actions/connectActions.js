@@ -7,7 +7,8 @@ import {
 import crypto from 'crypto'
 import {signInKeys} from '../Components/signInDefinitions'
 //import {NO_CONNECTION, CONNECTION_BUT_LOCKED, CONNECTION_UNLOCKED} from '../Reducers/ConnectReducer'
-const formUrl=(ip, port)=>(...extensions)=>`https://${ip}:${port}/v1/${extensions.join('/')}`
+//const formUrl=(ip, port)=>(...extensions)=>`https://${ip}:${port}/v1/${extensions.join('/')}`
+const formUrl=(ip, port)=>(...extensions)=>`http://${ip}:${port}/v1/${extensions.join('/')}`
 
 const getLightningRequest=({macaroon, method, endpoint, origin, body})=>{
     const headers = new Headers({
