@@ -2,7 +2,7 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux' 
-import { getConnectionInformation } from '../Actions/connectActions.js'
+import { checkConnection } from '../Actions/connectActions.js'
 import PropTypes from 'prop-types'
 export const ConnectButton=({
     handleConnect,
@@ -24,7 +24,7 @@ const mapStateToProps=({signin, connection})=>({
     ...signin
 })
 const mapDispatchToProps=dispatch=>({
-    handleConnect:getConnectionInformation(dispatch)
+    handleConnect:checkConnection(dispatch)
 })
 export default connect(
     mapStateToProps,

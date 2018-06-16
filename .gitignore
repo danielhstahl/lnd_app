@@ -22,3 +22,5 @@ yarn-error.log*
 *.cert
 *.macaroon
 *.proto
+*.base64
+*.macaroon

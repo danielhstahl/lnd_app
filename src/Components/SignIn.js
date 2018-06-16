@@ -43,18 +43,10 @@ const OnlyLightningNodeInfo=({signin, updateSignIn})=>[
     <TextField
         key={MACAROON_KEY}
         margin="dense"
+        multiline
         value={signin[MACAROON_KEY]}
         onChange={updateSignIn(MACAROON_KEY)}
         label="Macaroon"
-        type="text"
-        fullWidth
-    />,
-    <TextField
-        key={TLS_KEY}
-        margin="dense"
-        value={signin[TLS_KEY]}
-        onChange={updateSignIn(TLS_KEY)}
-        label="TLS"
         type="text"
         fullWidth
     />
@@ -117,15 +109,15 @@ export const SignIn=withStyles(styles)(({
         >
             <CardContent>
                 <Route 
-                    path='/signin/firsttime'
+                    path='/credentials/firsttime'
                     render={()=><FirstTimeRender signin={signin} updateSignIn={updateSignIn}/>}
                 />
                 <Route 
-                    path='/signin/password'
+                    path='/credentials/password'
                     render={()=><OnlyPassword signin={signin} updateSignIn={updateSignIn}/>}
                 />
                 <Route 
-                    path='/signin/updatewallet'
+                    path='/credentials/updatewallet'
                     render={()=><OnlyLightningNodeInfo signin={signin} updateSignIn={updateSignIn}/>}
                 />
             </CardContent>
