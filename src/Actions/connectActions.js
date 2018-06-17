@@ -4,10 +4,13 @@ import {
     CONNECT_LOCKED,
     CONNECT_UNLOCKED,
     GET_INFO,
-    JUST_UPDATED
+    GET_BALANCE,
+    GET_TRANSACTIONS,
+    JUST_UPDATED,
+    SET_ENCRYPTED_MACAROON
 } from './actionDefinitions'
 import crypto from 'crypto'
-import {encryptedMacaroon} from '../utils/localStorage'
+//import {encryptedMacaroon} from '../utils/localStorage'
 
 const formUrl=(...extensions)=>`/v1/${extensions.join('/')}`
 
@@ -24,19 +27,24 @@ const getLightningRequest=({macaroon, method, endpoint, origin, body})=>{
     return new Request(endpoint, requestData)
 }
 const trimStr=str=>str.trim()
-const getMacaroon=({password, macaroon})=>{
+const getMacaroon=dispatch=>({password, macaroon, encryptedMacaroon})=>{
     if(!macaroon){
         const decipher = crypto.createDecipher('aes192', password)
         return decipher.update(encryptedMacaroon, 'hex', 'utf8')+ decipher.final('utf8')
     }
     else{
         const cipher = crypto.createCipher('aes192', password)
-        localStorage.setItem('macaroon', cipher.update(macaroon, 'utf8', 'hex')+cipher.final('hex'))
+        const encryptedMacaroon= cipher.update(macaroon, 'utf8', 'hex')+cipher.final('hex')
+        localStorage.setItem('macaroon',encryptedMacaroon)
+        dispatch({
+            type:SET_ENCRYPTED_MACAROON,
+            value:encryptedMacaroon
+        })
         return macaroon
     }
 }
-const connectFactory=fn=>dispatch=>({password, macaroon, ...rest})=>()=>{
-    const finalMacaroon=getMacaroon({password, macaroon})
+const connectFactory=fn=>dispatch=>({password, macaroon, encryptedMacaroon, ...rest})=>()=>{
+    const finalMacaroon=getMacaroon(dispatch)({password, macaroon, encryptedMacaroon})
     dispatch({
         type:ATTEMPT_CONNECT,
         value:true
@@ -89,6 +97,16 @@ const generateNotify=dispatch=>()=>{
         4000
     )
 }
+const getBalanceLocal=dispatch=>({macaroon})=>{
+    const req=getLightningRequest({
+        macaroon, 
+        method:'GET', 
+        endpoint:formUrl('balance', 'blockchain'),
+        //body:JSON.stringify({wallet_password:walletPassword})
+    })
+    return fetch(req)
+        .then(checkWhetherFound(dispatch, GET_BALANCE))
+}
 /**three possible outcomes: no connection, connection but locked, connection and unlocked */
 const checkConnectionLocal=dispatch=>({macaroon})=>{
     const req=getLightningRequest({
@@ -96,6 +114,7 @@ const checkConnectionLocal=dispatch=>({macaroon})=>{
         method:'GET', 
         endpoint:formUrl('getinfo')
     })
+    getBalanceLocal(dispatch)({macaroon})
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_INFO))
         .then(generateNotify(dispatch))
@@ -112,9 +131,26 @@ const unlockWalletLocal=dispatch=>({macaroon, walletPassword})=>{
         .then(checkWhetherFound(dispatch))
         .then(generateNotify(dispatch))
 }
+
+const getTransactionsLocal=dispatch=>({macaroon})=>{
+    const req=getLightningRequest({
+        macaroon, 
+        method:'GET', 
+        endpoint:formUrl('transactions')
+    })
+    return fetch(req)
+        .then(checkWhetherFound(dispatch, GET_TRANSACTIONS))
+        .then(generateNotify(dispatch))
+}
+
+
+
 export const checkConnection=connectFactory(checkConnectionLocal)
 
 export const unlockWallet=connectFactory(unlockWalletLocal)
+export const getBalance=connectFactory(getBalanceLocal)
+export const getTransactions=connectFactory(getTransactionsLocal)
+
 
 export const getInfo=dispatch=>()=>{
 

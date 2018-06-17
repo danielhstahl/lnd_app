@@ -10,9 +10,9 @@ import {ConnectButton} from './ConnectButton'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
 import UnlockWallet from './UnlockWallet'
-import {encryptedMacaroon, macaroonMessage} from '../utils/localStorage'
+import Button from 'components/CustomButtons/Button'
 import { withStyles } from '@material-ui/core/styles'
-import {updateSignIn} from '../Actions/signInActions'
+import {updateSignIn, removeMacaroon} from '../Actions/signInActions'
 import Grid from '@material-ui/core/Grid'
 
 const notAllItemsExist=({macaroon, password})=>!(macaroon&&password)
@@ -35,10 +35,8 @@ const styles = {
     }
 }
 const formControlProps={fullWidth:true}
-const getMacaroonValue=macaroon=>macaroon||(encryptedMacaroon?macaroonMessage:"")
-const SignIn=withStyles(styles)(({classes, macaroon, password, updateSignIn})=>{
-    const macaroonVal=getMacaroonValue(macaroon)
-    return (
+const getMacaroonValue=(macaroon, encryptedMacaroon)=>macaroon||encryptedMacaroon
+const SignIn=withStyles(styles)(({classes, macaroon, password, encryptedMacaroon, updateSignIn, removeMacaroon})=>(
     <Grid container>
         <GridItem xs={12} sm={12} md={8}>
             <Card>
@@ -49,16 +47,20 @@ const SignIn=withStyles(styles)(({classes, macaroon, password, updateSignIn})=>{
                 <CardBody>
                     <Grid container>
                     <GridItem xs={12} sm={12} md={12}>
+                        {encryptedMacaroon?
+                        <Button onClick={removeMacaroon}>
+                            Remove existing encrypted macaroon
+                        </Button>:
                         <CustomInput
                             labelText="Macaroon"
                             id="macaroon"
                             formControlProps={formControlProps}
                             inputProps={{
-                                value:macaroonVal,
+                                value:macaroon,
                                 onChange:updateSignIn('macaroon'),
                                 multiline:true
                             }}
-                        />
+                        />}
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12}>
                         <CustomInput
@@ -77,9 +79,11 @@ const SignIn=withStyles(styles)(({classes, macaroon, password, updateSignIn})=>{
                 <CardFooter>
                     <ConnectButton 
                         color="primary"
-                        disabled={notAllItemsExist({macaroon:macaroonVal, password})}
+                        disabled={notAllItemsExist({
+                            macaroon:getMacaroonValue(macaroon, encryptedMacaroon), password
+                        })}
                     >
-                        Save
+                        {encryptedMacaroon?'Connect':'Save and Connect'}
                     </ConnectButton>
                 </CardFooter>
                 <UnlockWallet />
@@ -87,7 +91,7 @@ const SignIn=withStyles(styles)(({classes, macaroon, password, updateSignIn})=>{
         </GridItem>
     </Grid>
     )
-})
+)
 
 SignIn.propTypes={
     macaroon:PropTypes.string,
@@ -95,9 +99,13 @@ SignIn.propTypes={
     updateSignIn:PropTypes.func.isRequired
 }
 
-const mapStateToProps=({signin})=>signin
+const mapStateToProps=({signin, encryptedMacaroon})=>({
+    encryptedMacaroon,
+    ...signin
+})
 const mapDispatchToProps=dispatch=>({
-    updateSignIn:updateSignIn(dispatch)
+    updateSignIn:updateSignIn(dispatch),
+    removeMacaroon:removeMacaroon(dispatch)
 })
 export default connect(
     mapStateToProps,

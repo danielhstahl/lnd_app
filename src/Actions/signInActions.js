@@ -1,16 +1,17 @@
 import { 
-    ENTER_SIGN_IN
+    ENTER_SIGN_IN,
+    REMOVE_MACAROON
 } from '../Actions/actionDefinitions'
-/*
-const textActionGenerator=type=>dispatch=>e=>dispatch({
-    type,
-    value:e.target.value
-})
-export const updatePassword=textActionGenerator(ENTER_WALLET_PASSWORD)
-export const updateIP=textActionGenerator(ENTER_IP)
-*/
+
 export const updateSignIn=dispatch=>key=>e=>dispatch({
     type:ENTER_SIGN_IN,
     key,
     value:e.target.value
 })
+
+export const removeMacaroon=dispatch=>()=>{
+    localStorage.removeItem('macaroon')
+    dispatch({
+        type:REMOVE_MACAROON
+    })
+}

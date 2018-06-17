@@ -1,5 +1,6 @@
 import Dashboard from "@material-ui/icons/Dashboard"
 import Person from "@material-ui/icons/Person"
+import Transactions from '../views/Transactions'
 import ContentPaste from "@material-ui/icons/ContentPaste"
 import LibraryBooks from "@material-ui/icons/LibraryBooks"
 import BubbleChart from "@material-ui/icons/BubbleChart"
@@ -9,13 +10,13 @@ import Unarchive from "@material-ui/icons/Unarchive"
 
 import SignIn from 'views/SignIn'
 export default [
-    /*{
+    {
       path: "/transactions",
-      sidebarName: "Send/Receive Money",
-      navbarName: "Send/Receive Money",
-      icon: Dashboard,
-      component: DashboardPage
-    },*/
+      sidebarName: "View Transactions",
+      navbarName: "View Transactions",
+      icon: ContentPaste,
+      component: Transactions
+    },
     {
       path: "/settings",
       sidebarName: "Lightning Settings",

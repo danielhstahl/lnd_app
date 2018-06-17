@@ -23,11 +23,10 @@ import Header from 'components/Header/Header'
 import homeStyle from "assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx"
 const switchRoutes = (
     <Switch>
-      {appRoutes.map((prop, key) => {
-        if (prop.redirect)
-          return <Redirect from={prop.path} to={prop.to} key={key} />;
-        return <Route path={prop.path} component={prop.component} key={key} />;
-      })}
+      {appRoutes.map((prop, key) =>prop.redirect?
+        <Redirect from={prop.path} to={prop.to} key={key} />:
+        <Route path={prop.path} component={prop.component} key={key} />
+      )}
     </Switch>
 )
 

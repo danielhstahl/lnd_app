@@ -1,4 +1,4 @@
-import signin from './signInReducer'
+import signin, {encryptedMacaroonReducer} from './signInReducer'
 import connection from './connectReducer'
 import drawer from './homeReducer'
 import network from './networkInformation'
@@ -8,5 +8,6 @@ export default combineReducers({
     signin,
     connection,
     drawer,
-    network
+    network,
+    encryptedMacaroon:encryptedMacaroonReducer
 })

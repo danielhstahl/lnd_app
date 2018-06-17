@@ -8,6 +8,7 @@ import { createStore } from 'redux'
 import reducer from './Reducers/reducers'
 import 'typeface-roboto'
 import registerServiceWorker from './registerServiceWorker'
+import "assets/css/material-dashboard-react.css?v=1.3.0"
 import {
     HashRouter as Router,
     Route
