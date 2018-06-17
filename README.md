@@ -20,7 +20,7 @@ The source code is available in this repository.  The app has no server.  It is 
 
 ## Screenshots
 
-[!alt text](./screenshots/Screenshot-2018-6-17 React App.png)
+[!alt text](./screenshots/Screenshot-2018-6-17 React App.png?raw=true)
 
 ## Acknowledgments
 
