@@ -6,7 +6,7 @@ const options={
    // hostname: '108.70.247.57',
     hostname: '192.168.1.92',
     port: 8080,
-    path: '/v1/getinfo',
+    path: '/v1/transactions',
     method: 'GET',
     rejectUnauthorized: false,
     headers:{
