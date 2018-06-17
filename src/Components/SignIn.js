@@ -14,37 +14,17 @@ import {
 import { withStyles } from '@material-ui/core/styles'
 import {updateSignIn} from '../Actions/signInActions'
 import {signInKeys} from './signInDefinitions'
-/*import {IP_KEY, PORT_KEY, MACAROON_KEY, TLS_KEY, PASSWORD_KEY} from './signInDefinitions'*/
 import Grid from '@material-ui/core/Grid'
-const {IP_KEY, PORT_KEY, MACAROON_KEY, TLS_KEY, PASSWORD_KEY}=signInKeys
+const {MACAROON_KEY, PASSWORD_KEY}=signInKeys
 const signInKeysArray=Object.entries(signInKeys)
 const notAllItemsExist=items=>!signInKeysArray.reduce((aggr, [key, value])=>aggr&&items[value])
 
 const OnlyLightningNodeInfo=({signin, updateSignIn})=>[
     <TextField
-        autoFocus
-        key={IP_KEY}
-        margin="dense"
-        value={signin[IP_KEY]}
-        onChange={updateSignIn(IP_KEY)}
-        label="IP Address"
-        type="text"
-        fullWidth
-    />,
-    <TextField
-        key={PORT_KEY}
-        margin="dense"
-        value={signin[PORT_KEY]}
-        onChange={updateSignIn(PORT_KEY)}
-        label="Port"
-        type="text"
-        fullWidth
-    />,
-    <TextField
         key={MACAROON_KEY}
         margin="dense"
         multiline
-        value={signin[MACAROON_KEY]}
+        value={signin[MACAROON_KEY]||''}
         onChange={updateSignIn(MACAROON_KEY)}
         label="Macaroon"
         type="text"
@@ -53,7 +33,7 @@ const OnlyLightningNodeInfo=({signin, updateSignIn})=>[
 ]
 const FirstTimeRender=({signin, updateSignIn})=>[
     <Typography color="textSecondary" key='contentHead'>
-        Enter your IP, port, macaroon, and TLS key.  These are stored in local storage, so add a password for encryption.
+        Enter your macaroon.  This is stored in local storage, so add a password for encryption.
     </Typography>,
     <OnlyLightningNodeInfo 
         key='nodeInfo'
@@ -63,7 +43,7 @@ const FirstTimeRender=({signin, updateSignIn})=>[
     <TextField
         key='passKey'
         margin="dense"
-        value={signin[PASSWORD_KEY]}
+        value={signin[PASSWORD_KEY]||''}
         onChange={updateSignIn(PASSWORD_KEY)}
         label="Password"
         type="password"
@@ -73,12 +53,12 @@ const FirstTimeRender=({signin, updateSignIn})=>[
 
 const OnlyPassword=({signin, updateSignIn})=>[
     <Typography color="textSecondary" key='contentHead'>
-            Enter Password to connect to Node
+            Enter Password to connect to Lightning Node
     </Typography>,
     <TextField
         key='passKey'
         margin="dense"
-        value={signin[PASSWORD_KEY]}
+        value={signin[PASSWORD_KEY]||''}
         onChange={updateSignIn(PASSWORD_KEY)}
         label="Password"
         type="password"
@@ -133,10 +113,7 @@ export const SignIn=withStyles(styles)(({
     </Grid>
 ))
 SignIn.propTypes={
-    [IP_KEY]:PropTypes.string.isRequired,
-    [PORT_KEY]:PropTypes.string.isRequired,
     [MACAROON_KEY]:PropTypes.string.isRequired,
-    [TLS_KEY]:PropTypes.string.isRequired,
     [PASSWORD_KEY]:PropTypes.string.isRequired,
     history:PropTypes.shape({
         goBack:PropTypes.func.isRequired

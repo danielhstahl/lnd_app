@@ -2,7 +2,8 @@ import {
     ATTEMPT_CONNECT, 
     CONNECT_FAILED,
     CONNECT_LOCKED,
-    CONNECT_UNLOCKED
+    CONNECT_UNLOCKED,
+    JUST_UPDATED
 } from '../Actions/actionDefinitions'
 import {combineReducers} from 'redux'
 
@@ -33,7 +34,9 @@ const boolReducerGenerator=type=>(state=false, action)=>{
     }
 }
 const isConnecting=boolReducerGenerator(ATTEMPT_CONNECT)
+const justUpdated=boolReducerGenerator(JUST_UPDATED)
 export default combineReducers({
     isConnecting,
-    connectionStatus
+    connectionStatus,
+    justUpdated
 })

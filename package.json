@@ -2,8 +2,15 @@
   "name": "lnd_app",
   "version": "0.1.0",
   "private": true,
+  "proxy": {
+    "/": {
+      "target": "https://192.168.1.92:8080",
+      "secure": false
+    }
+  },
   "dependencies": {
     "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
     "prop-types": "^15.6.1",
     "qrcode.react": "^0.8.0",
     "react": "^16.4.0",

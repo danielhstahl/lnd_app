@@ -10,7 +10,11 @@ import {
     Switch
 } from 'react-router-dom'
 import SignIn from './SignIn'
+import ConnectionAlert from './ConnectionAlert'
+import {signInKeys} from '../Components/signInDefinitions'
+const {MACAROON_KEY}=signInKeys
 const pushChange=history=>(_, value)=>history.push('/'+value)
+const encryptedMacaroon=localStorage.getItem(MACAROON_KEY)
 export const Home=({match, history})=>[
     <AppBar position="static" key='appbar'>
         <Tabs value={match.params.tab} onChange={pushChange(history)}>
@@ -21,8 +25,13 @@ export const Home=({match, history})=>[
     </AppBar>,
     <Switch key='switchroutes'>    
         <Route path='/credentials/:type' component={SignIn} key='routecred'/>
-        <Redirect from='/credentials' to='/credentials/firsttime' key='redirectcred'/>
-    </Switch>
+        {encryptedMacaroon?
+            <Redirect from='/credentials' to='/credentials/password' key='redirectcred'/>:
+            <Redirect from='/credentials' to='/credentials/firsttime' key='redirectcred'/>
+        }
+    </Switch>,
+    <ConnectionAlert/>
+
     
 ]
 Home.propTypes={
@@ -30,7 +39,7 @@ Home.propTypes={
 }
 
 const mapStateToProps=({signin, connection})=>({
-    isConnecting:connection.isConnecting,
+    //isConnecting:connection.isConnecting,
     ...signin
 })
 const mapDispatchToProps=dispatch=>({
