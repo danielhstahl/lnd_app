@@ -1,0 +1,58 @@
+import React from 'react'
+import CardFooter from 'components/Card/CardFooter'
+import CardBody from 'components/Card/CardBody'
+import GridItem from 'components/Grid/GridItem'
+import CustomInput from "components/CustomInput/CustomInput.jsx"
+import {UnlockWalletButton} from './ConnectButton'
+import { connect } from 'react-redux' 
+import PropTypes from 'prop-types'
+import {CONNECTION_BUT_LOCKED} from '../Reducers/connectReducer'
+import {updateSignIn} from '../Actions/signInActions'
+import Grid from '@material-ui/core/Grid'
+
+const formControlProps={fullWidth:true}
+const UnlockWallet=({ walletPassword, updateSignIn, connectionStatus})=>CONNECTION_BUT_LOCKED===connectionStatus?
+    [
+        <CardBody key='walletbody'>
+            <Grid container>
+                <GridItem xs={12} sm={12} md={12}>
+                    <CustomInput
+                        labelText="Wallet Password"
+                        id="walletpassword"
+                        formControlProps={formControlProps}
+                        inputProps={{
+                            value:walletPassword||'',
+                            onChange:updateSignIn('walletPassword'),
+                            type:'password'
+                        }}
+                    />
+                </GridItem>
+            </Grid>
+        </CardBody>,
+        <CardFooter key='walletfooter'>
+            <UnlockWalletButton 
+                color="primary"
+                disabled={!walletPassword}
+            >
+                Unlock
+            </UnlockWalletButton>
+        </CardFooter>
+    ]:null
+
+
+UnlockWallet.propTypes={
+    walletPassword:PropTypes.string,
+    updateSignIn:PropTypes.func.isRequired
+}
+
+const mapStateToProps=({signin, connection})=>({
+    connectionStatus:connection.connectionStatus,
+    walletPassword:signin.walletPassword
+})
+const mapDispatchToProps=dispatch=>({
+    updateSignIn:updateSignIn(dispatch)
+})
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UnlockWallet)
