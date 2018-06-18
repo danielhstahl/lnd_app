@@ -35,8 +35,12 @@ const styles = {
     }
 }
 const formControlProps={fullWidth:true}
-const getMacaroonValue=(macaroon, encryptedMacaroon)=>macaroon||encryptedMacaroon
-const SignIn=withStyles(styles)(({classes, macaroon, password, encryptedMacaroon, updateSignIn, removeMacaroon})=>(
+const getWhetherMacaroonExists=(macaroon, encryptedMacaroon)=>(macaroon||encryptedMacaroon)?true:false
+const SignIn=withStyles(styles)(({
+    classes, macaroon, 
+    password, encryptedMacaroon,
+    updateSignIn, removeMacaroon
+})=>(
     <Grid container>
         <GridItem xs={12} sm={12} md={8}>
             <Card>
@@ -80,7 +84,7 @@ const SignIn=withStyles(styles)(({classes, macaroon, password, encryptedMacaroon
                     <ConnectButton 
                         color="primary"
                         disabled={notAllItemsExist({
-                            macaroon:getMacaroonValue(macaroon, encryptedMacaroon), password
+                            macaroon:getWhetherMacaroonExists(macaroon, encryptedMacaroon), password
                         })}
                     >
                         {encryptedMacaroon?'Connect':'Save and Connect'}

@@ -6,11 +6,9 @@ import {
     GET_INFO,
     GET_BALANCE,
     GET_TRANSACTIONS,
-    JUST_UPDATED,
-    SET_ENCRYPTED_MACAROON
+    JUST_UPDATED
 } from './actionDefinitions'
 import crypto from 'crypto'
-//import {encryptedMacaroon} from '../utils/localStorage'
 
 const formUrl=(...extensions)=>`/v1/${extensions.join('/')}`
 
@@ -27,63 +25,58 @@ const getLightningRequest=({macaroon, method, endpoint, origin, body})=>{
     return new Request(endpoint, requestData)
 }
 const trimStr=str=>str.trim()
-const getMacaroon=dispatch=>({password, macaroon, encryptedMacaroon})=>{
-    if(!macaroon){
-        const decipher = crypto.createDecipher('aes192', password)
-        return decipher.update(encryptedMacaroon, 'hex', 'utf8')+ decipher.final('utf8')
-    }
-    else{
-        const cipher = crypto.createCipher('aes192', password)
-        const encryptedMacaroon= cipher.update(macaroon, 'utf8', 'hex')+cipher.final('hex')
-        localStorage.setItem('macaroon',encryptedMacaroon)
-        dispatch({
-            type:SET_ENCRYPTED_MACAROON,
-            value:encryptedMacaroon
-        })
-        return macaroon
-    }
+const getMacaroon=({password, encryptedMacaroon})=>{
+    const decipher = crypto.createDecipher('aes192', password)
+    return decipher.update(encryptedMacaroon, 'hex', 'utf8')+ decipher.final('utf8')
 }
-const connectFactory=fn=>dispatch=>({password, macaroon, encryptedMacaroon, ...rest})=>()=>{
-    const finalMacaroon=getMacaroon(dispatch)({password, macaroon, encryptedMacaroon})
+const connectFactory=fn=>dispatch=>({password, encryptedMacaroon, ...rest})=>()=>{
+    const macaroon=getMacaroon({password, encryptedMacaroon})
     dispatch({
         type:ATTEMPT_CONNECT,
         value:true
     })
-    return fn(dispatch)({macaroon:finalMacaroon, ...rest}).then(()=>{
-        dispatch({
+    return fn(dispatch)({macaroon, ...rest})
+        .then(()=>dispatch({
             type:ATTEMPT_CONNECT,
             value:false
+        }))
+}
+const dispatchLockedIfNotFound=dispatch=>txt=>{
+    if(txt==='Not Found'){
+        dispatch({
+            type:CONNECT_LOCKED
         })
+    }
+    return txt
+}
+const dispatchUnlockedIfUnlocked=dispatch=>txt=>{
+    if(txt!=='Not Found'){
+        dispatch({
+            type:CONNECT_UNLOCKED
+        })
+    }
+    return txt
+}
+const dispatchResultIfType=(dispatch, type)=>txt=>{
+    if(txt!=='Not Found'&&type){
+        dispatch({
+            type,
+            value:JSON.parse(txt)
+        })
+    }
+}
+const dispatchError=dispatch=>err=>{
+    console.log(err)
+    dispatch({
+        type:CONNECT_FAILED
     })
 }
 const checkWhetherFound=(dispatch, type)=>res=>Promise.resolve(res.text())
     .then(trimStr)
-    .then(txt=>{
-        console.log(txt)
-        if(txt==='Not Found'){
-            dispatch({
-                type:CONNECT_LOCKED
-            })
-        }
-        else{
-            dispatch({
-                type:CONNECT_UNLOCKED
-            })
-            if(type){
-                dispatch({
-                    type,
-                    value:JSON.parse(txt)
-                })
-            }
-            
-        }
-    })
-    .catch(err=>{
-        console.log(err)
-        dispatch({
-            type:CONNECT_FAILED
-        })
-    })
+    .then(dispatchLockedIfNotFound(dispatch))
+    .then(dispatchUnlockedIfUnlocked(dispatch))
+    .then(dispatchResultIfType(dispatch, type))
+    .catch(dispatchError(dispatch))
 
 const generateNotify=dispatch=>()=>{
     dispatch({
@@ -140,13 +133,9 @@ const getTransactionsLocal=dispatch=>({macaroon})=>{
     })
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_TRANSACTIONS))
-        .then(generateNotify(dispatch))
 }
 
-
-
 export const checkConnection=connectFactory(checkConnectionLocal)
-
 export const unlockWallet=connectFactory(unlockWalletLocal)
 export const getBalance=connectFactory(getBalanceLocal)
 export const getTransactions=connectFactory(getTransactionsLocal)
