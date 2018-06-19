@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-
+import {filterMessageVariant} from '../utils/componentUtils'
 import Snackbar from 'components/Snackbar/Snackbar'
 import WarningIcon from '@material-ui/icons/Warning'
 import {
@@ -21,18 +21,7 @@ const variantIcon = {
   info: InfoIcon,
 }
 
-const filterMessageVariant=message=>{
-    switch(message){
-        case CONNECTION_BUT_LOCKED:
-            return 'warning' 
-        case CONNECTION_UNLOCKED:
-            return 'success' 
-        case NO_CONNECTION:
-            return 'danger'
-        default:
-            return 'info'
-    }
-}
+
 const filterMessageText=message=>{
     switch(message){
         case CONNECTION_BUT_LOCKED:
@@ -45,6 +34,7 @@ const filterMessageText=message=>{
             return `Something happened.  But I don't know what`
     }
 }
+
 export const ConnectionAlert=({justUpdated, message})=>{
     const variant=filterMessageVariant(message)
     return (
@@ -56,6 +46,10 @@ export const ConnectionAlert=({justUpdated, message})=>{
             message={filterMessageText(message)}
         />
     )
+}
+ConnectionAlert.propTypes={
+    justUpdated:PropTypes.bool.isRequired,
+    message:PropTypes.string.isRequired
 }
 
 const mapStateToProps=({connection})=>({

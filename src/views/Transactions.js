@@ -93,6 +93,23 @@ const Transactions=withStyles(styles)(({connectionStatus, transactions, encrypte
     </GridItem>
     </Grid>
 ))
+Transactions.propTypes={
+    connectionStatus:PropTypes.string.isRequired,
+    transactions:PropTypes.arrayOf(PropTypes.shape({
+        tx_hash:PropTypes.string.isRequired,
+        amount:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
+        num_confirmations:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
+        time_stamp:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
+        total_fees:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired
+    })),
+    encryptedMacaroon:PropTypes.string,
+    password:PropTypes.string,
+    classes:PropTypes.shape({
+        cardTitleWhite:PropTypes.object.isRequired,
+        cardCategoryWhite:PropTypes.object.isRequired
+    }).isRequired,
+    getTransactions:PropTypes.func.isRequired
+}
 
 const mapStateToProps=({signin, connection, network, encryptedMacaroon})=>({
     password:signin.password,

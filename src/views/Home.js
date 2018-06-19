@@ -1,6 +1,5 @@
 import React from 'react'
 import Sidebar from "components/Sidebar/Sidebar"
-import Grid from '@material-ui/core/Grid'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
 import {
@@ -8,7 +7,6 @@ import {
     Redirect,
     Switch
 } from 'react-router-dom'
-import SignIn from './SignIn'
 import ConnectionAlert from './ConnectionAlert'
 import ConnectionInfo from './ConnectionInfo'
 import image from "assets/img/lightning_australia.jpg";
@@ -17,9 +15,6 @@ import appRoutes from 'routes/appRoutes'
 import {toggleDrawer} from '../Actions/homeActions'
 import { withStyles } from '@material-ui/core/styles'
 import Header from 'components/Header/Header'
-
-//import {encryptedMacaroon} from '../utils/localStorage'
-//const pushChange=history=>(_, value)=>history.push('/'+value)
 import homeStyle from "assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx"
 const switchRoutes = (
     <Switch>
@@ -58,16 +53,20 @@ export const Home=withStyles(homeStyle)(({toggleDrawer, drawer, classes, ...rest
 ))
 
 Home.propTypes={
-    //handleConnect:PropTypes.func.isRequired //
+    toggleDrawer:PropTypes.func.isRequired,
+    drawer:PropTypes.bool.isRequired,
+    classes:PropTypes.shape({
+        mainPanel:PropTypes.object,
+        content:PropTypes.object,
+        container:PropTypes.object
+    }).isRequired
 }
 
 const mapStateToProps=({drawer})=>({
-    //isConnecting:connection.isConnecting,
     drawer
 })
 const mapDispatchToProps=dispatch=>({
     toggleDrawer:toggleDrawer(dispatch)
-    //handleConnect:getConnectionInformation(dispatch)
 })
 export default connect(
     mapStateToProps,

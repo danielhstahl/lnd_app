@@ -6,7 +6,7 @@ import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import WarningIcon from '@material-ui/icons/Warning'
-
+import {filterMessageVariant} from '../utils/componentUtils'
 
 import { withStyles } from '@material-ui/core/styles'
 import sidebarStyle from "assets/jss/material-dashboard-react/components/sidebarStyle.jsx"
@@ -30,18 +30,6 @@ const stylesSnackContent = theme => ({
     ...snackbarContentStyle,
     ...sidebarStyle(theme)
 })
-const filterMessageVariant=message=>{
-    switch(message){
-        case CONNECTION_BUT_LOCKED:
-            return 'warning' 
-        case CONNECTION_UNLOCKED:
-            return 'success' 
-        case NO_CONNECTION:
-            return 'danger'
-        default:
-            return 'info'
-    }
-}
 
 const filterInfo=(message, info)=>{
     switch(message){
@@ -73,6 +61,17 @@ const ChainStats=({message, info, classes})=>{
         {filterInfo(message, info)}
     </div>
     )
+}
+ChainStats.propTypes={
+    message:PropTypes.string.isRequired,
+    info:PropTypes.shape({
+        num_peers:PropTypes.oneOf([PropTypes.string, PropTypes.number]).isRequired,
+        testnet:PropTypes.bool.isRequired,
+        block_height:PropTypes.oneOf([PropTypes.string, PropTypes.number]).isRequired
+    }),
+    classes:PropTypes.shape({
+        logoImage:PropTypes.object
+    }).isRequired
 }
 const mapStateToPropsChain=({connection, network})=>({
     message:connection.connectionStatus,

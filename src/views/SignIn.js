@@ -100,7 +100,13 @@ const SignIn=withStyles(styles)(({
 SignIn.propTypes={
     macaroon:PropTypes.string,
     password:PropTypes.string,
-    updateSignIn:PropTypes.func.isRequired
+    updateSignIn:PropTypes.func.isRequired,
+    encryptedMacaroon:PropTypes.string,
+    removeMacaroon:PropTypes.func.isRequired,
+    classes:PropTypes.shape({
+        cardTitleWhite:PropTypes.object.isRequired,
+        cardCategoryWhite:PropTypes.object.isRequired
+    }).isRequired
 }
 
 const mapStateToProps=({signin, encryptedMacaroon})=>({
