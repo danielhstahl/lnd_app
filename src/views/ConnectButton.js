@@ -28,30 +28,40 @@ LndButton.propTypes={
     handleConnect:PropTypes.func.isRequired //
 }
 
-const mapStateToPropsConnectButton=({signin, connection})=>({
+const mapStateToProps=({signin, connection, encryptedMacaroon})=>({
     isConnecting:connection.isConnecting,
-    ...signin
+    ...signin,
+    encryptedMacaroon
 })
 
 const mapDispatchToPropsConnectButton=dispatch=>({
     handleConnect:val=>()=>{
-        return setMacaroon(dispatch)(val)
-            .then(checkConnection(dispatch)(val))
+        const {value}=setMacaroon(dispatch)(val)()
+        console.log(value)
+        console.log(val)
+        if(value){
+            checkConnection(dispatch)({...val, encryptedMacaroon:value})()
+        }
+        else{
+            checkConnection(dispatch)(val)()
+        }
+        
     }      
 })
 export const ConnectButton=connect(
-    mapStateToPropsConnectButton,
+    mapStateToProps,
     mapDispatchToPropsConnectButton
 )(LndButton)
-
-const mapStateToPropsUnlockWalletButton=({signin, connection})=>({
+/*
+const mapStateToPropsUnlockWalletButton=({signin, connection, encryptedMacaroon})=>({
     isConnecting:connection.isConnecting,
-    ...signin
-})
+    ...signin,
+    encryptedMacaroon
+})*/
 const mapDispatchToPropsUnlockWalletButton=dispatch=>({
     handleConnect:unlockWallet(dispatch)
 })
 export const UnlockWalletButton=connect(
-    mapStateToPropsUnlockWalletButton,
+    mapStateToProps,
     mapDispatchToPropsUnlockWalletButton
 )(LndButton)

@@ -27,4 +27,5 @@ export const setMacaroon=dispatch=>({macaroon, password})=>()=>{
             value:encryptedMacaroon
         })
     }
+    return {}
 }
