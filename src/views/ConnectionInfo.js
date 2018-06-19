@@ -49,7 +49,7 @@ const filterInfo=(message, info)=>{
     }
 }
 
-const ChainStats=({message, info, classes})=>{
+export const ChainStats=({message, info, classes})=>{
     const variant =filterMessageVariant(message)
     const Icon = variantIcon[variant]
     return (
@@ -65,10 +65,11 @@ const ChainStats=({message, info, classes})=>{
 ChainStats.propTypes={
     message:PropTypes.string.isRequired,
     info:PropTypes.shape({
-        num_peers:PropTypes.oneOf([PropTypes.string, PropTypes.number]).isRequired,
-        testnet:PropTypes.bool.isRequired,
-        block_height:PropTypes.oneOf([PropTypes.string, PropTypes.number]).isRequired
-    }),
+        num_peers:PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+        testnet:PropTypes.bool,
+        block_height:PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+        synced_to_chain:PropTypes.bool
+    }).isRequired,
     classes:PropTypes.shape({
         logoImage:PropTypes.object
     }).isRequired
