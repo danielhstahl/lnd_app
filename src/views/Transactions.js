@@ -1,11 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
-import ErrorIcon from '@material-ui/icons/Error'
-import InfoIcon from '@material-ui/icons/Info'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import WarningIcon from '@material-ui/icons/Warning'
 import Button from "components/CustomButtons/Button"
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
