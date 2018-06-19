@@ -14,7 +14,6 @@ const styles={
     progress:{
         color:primaryColor
     }
-    
 }
 const PrimaryColorProgress=withStyles(styles)(({classes})=><CircularProgress className={classes.progress}/>)
 const LndButton=({
