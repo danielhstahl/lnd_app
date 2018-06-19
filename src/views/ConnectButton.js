@@ -2,6 +2,7 @@ import React from 'react'
 import Button from 'components/CustomButtons/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux' 
+//import classNames from 'classnames'
 import { checkConnection, unlockWallet } from '../Actions/connectActions'
 import { setMacaroon} from '../Actions/signInActions'
 import PropTypes from 'prop-types'
@@ -9,10 +10,13 @@ import { withStyles } from '@material-ui/core/styles'
 import {
     primaryColor
   } from "assets/jss/material-dashboard-react.jsx"
-const styles=theme=>({
-    color:primaryColor
-})
-const PrimaryColorProgress=withStyles(styles)(CircularProgress)
+const styles={
+    progress:{
+        color:primaryColor
+    }
+    
+}
+const PrimaryColorProgress=withStyles(styles)(({classes})=><CircularProgress className={classes.progress}/>)
 const LndButton=({
     handleConnect,
     isConnecting,
@@ -37,8 +41,6 @@ const mapStateToProps=({signin, connection, encryptedMacaroon})=>({
 const mapDispatchToPropsConnectButton=dispatch=>({
     handleConnect:val=>()=>{
         const {value}=setMacaroon(dispatch)(val)()
-        console.log(value)
-        console.log(val)
         if(value){
             checkConnection(dispatch)({...val, encryptedMacaroon:value})()
         }
