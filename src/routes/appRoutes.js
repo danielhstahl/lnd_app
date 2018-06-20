@@ -18,6 +18,13 @@ export default [
       component: Transactions
     },
     {
+      path: "/invoices",
+      sidebarName: "View Invoices",
+      navbarName: "View Invoices",
+      icon: ContentPaste,
+      component: Transactions //add invoices
+    },
+    {
       path: "/settings",
       sidebarName: "Lightning Settings",
       navbarName: "Settings",

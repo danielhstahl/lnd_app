@@ -6,7 +6,8 @@ import {
     GET_INFO,
     GET_BALANCE,
     GET_TRANSACTIONS,
-    JUST_UPDATED
+    JUST_UPDATED,
+    GET_INVOICES
 } from './actionDefinitions'
 import crypto from 'crypto'
 import {delay} from '../utils/componentUtils'
@@ -50,7 +51,7 @@ const dispatchLockedIfNotFound=dispatch=>txt=>{
     return txt
 }
 const dispatchUnlockedIfNotUnlocking=dispatch=>txt=>{
-    if(txt!=='Not Found'&&txt!=='{"error":"context canceled","code":1}'){ //for some odd reason, unlocking returns this error
+    if(txt!=='Not Found'&&txt!=='{"error":"context canceled","code":1}'){ //for some odd reason, unlocking returns this error even when successful
         dispatch({
             type:CONNECT_UNLOCKED
         })
@@ -137,10 +138,21 @@ const getTransactionsLocal=dispatch=>({macaroon})=>{
         .then(checkWhetherFound(dispatch, GET_TRANSACTIONS))
 }
 
+const getInvoicesLocal=dispatch=>({macaroon})=>{
+    const req=getLightningRequest({
+        macaroon, 
+        method:'GET', 
+        endpoint:formUrl('invoices')
+    })
+    return fetch(req)
+        .then(checkWhetherFound(dispatch, GET_INVOICES))
+}
+
 export const checkConnection=connectFactory(checkConnectionLocal)
 export const unlockWallet=connectFactory(unlockWalletLocal)
 export const getBalance=connectFactory(getBalanceLocal)
 export const getTransactions=connectFactory(getTransactionsLocal)
+export const getInvoices=connectFactory(getInvoicesLocal)
 
 
 export const getInfo=dispatch=>()=>{
