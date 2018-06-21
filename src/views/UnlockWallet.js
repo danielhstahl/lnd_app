@@ -11,6 +11,7 @@ import {updateSignIn} from '../Actions/signInActions'
 import Grid from '@material-ui/core/Grid'
 
 const formControlProps={fullWidth:true}
+const style={color:"primary"}
 const UnlockWallet=({ walletPassword, updateSignIn, connectionStatus})=>CONNECTION_BUT_LOCKED===connectionStatus?
     [
         <CardBody key='walletbody'>
@@ -31,8 +32,8 @@ const UnlockWallet=({ walletPassword, updateSignIn, connectionStatus})=>CONNECTI
         </CardBody>,
         <CardFooter key='walletfooter'>
             <UnlockWalletButton 
-                color="primary"
-                disabled={!walletPassword}
+                styles={{disabled:!walletPassword, ...style}}
+                //disabled={!walletPassword}
             >
                 Unlock
             </UnlockWalletButton>

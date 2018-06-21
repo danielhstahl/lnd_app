@@ -36,6 +36,7 @@ const styles = {
 }
 const formControlProps={fullWidth:true}
 const getWhetherMacaroonExists=(macaroon, encryptedMacaroon)=>(macaroon||encryptedMacaroon)?true:false
+const style={color:"primary"}
 const SignIn=withStyles(styles)(({
     classes, macaroon, 
     password, encryptedMacaroon,
@@ -82,10 +83,12 @@ const SignIn=withStyles(styles)(({
                 </CardBody>
                 <CardFooter>
                     <ConnectButton 
-                        color="primary"
-                        disabled={notAllItemsExist({
+                        styles={{disabled:notAllItemsExist({
                             macaroon:getWhetherMacaroonExists(macaroon, encryptedMacaroon), password
-                        })}
+                        }), ...style}}
+                        /*disabled={notAllItemsExist({
+                            macaroon:getWhetherMacaroonExists(macaroon, encryptedMacaroon), password
+                        })}*/
                     >
                         {encryptedMacaroon?'Connect':'Save and Connect'}
                     </ConnectButton>

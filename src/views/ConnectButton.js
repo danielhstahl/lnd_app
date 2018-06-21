@@ -21,15 +21,18 @@ export const LndButton=({
     handleConnect,
     isConnecting,
     children,
+    styles,
     ...rest
 })=>isConnecting?
     <PrimaryColorProgress/>:
-    <Button {...rest} onClick={handleConnect(rest)}>
+    <Button {...styles} onClick={handleConnect(rest)}>
         {children}
     </Button>
 
 LndButton.propTypes={
-    handleConnect:PropTypes.func.isRequired //
+    handleConnect:PropTypes.func.isRequired,
+    isConnecting:PropTypes.bool.isRequired,
+    children:PropTypes.node.isRequired //
 }
 
 const mapStateToProps=({signin, connection, encryptedMacaroon})=>({
