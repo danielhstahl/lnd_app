@@ -25,7 +25,7 @@ const switchRoutes = (
     </Switch>
 )
 
-export const Home=withStyles(homeStyle)(({toggleDrawer, drawer, classes, ...rest})=>(
+export const Home=withStyles(homeStyle)(({toggleDrawer, drawer, classes, location, ...rest})=>(
     <div>
         <Sidebar
             routes={appRoutes}
@@ -36,12 +36,14 @@ export const Home=withStyles(homeStyle)(({toggleDrawer, drawer, classes, ...rest
             open={drawer}
             color="blue"
             ExtraInfo={ConnectionInfo}
+            location={location}
             {...rest}
         />
         <div className={classes.mainPanel}>
             <Header
                 routes={appRoutes}
                 handleDrawerToggle={toggleDrawer}
+                location={location}
                 {...rest}
             />
             <div className={classes.content}>
@@ -59,6 +61,9 @@ Home.propTypes={
         mainPanel:PropTypes.object,
         content:PropTypes.object,
         container:PropTypes.object
+    }).isRequired,
+    location:PropTypes.shape({
+        pathname:PropTypes.string.isRequired
     }).isRequired
 }
 

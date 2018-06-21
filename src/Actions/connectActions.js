@@ -42,8 +42,15 @@ const connectFactory=fn=>dispatch=>({password, encryptedMacaroon, ...rest})=>()=
             value:false
         }))
 }
+
+const noConnection='Not Found'
+const successfulUnlock='{"error":"context canceled","code":1}'//for some odd reason, unlocking returns this error even when successful
+
+const hasNoConnection=txt=>txt===noConnection
+const hasConnectionAndAlreadyUnlocked=txt=>txt!==noConnection&&txt!==successfulUnlock
+
 const dispatchLockedIfNotFound=dispatch=>txt=>{
-    if(txt==='Not Found'){
+    if(hasNoConnection(txt)){
         dispatch({
             type:CONNECT_LOCKED
         })
@@ -51,7 +58,7 @@ const dispatchLockedIfNotFound=dispatch=>txt=>{
     return txt
 }
 const dispatchUnlockedIfNotUnlocking=dispatch=>txt=>{
-    if(txt!=='Not Found'&&txt!=='{"error":"context canceled","code":1}'){ //for some odd reason, unlocking returns this error even when successful
+    if(hasConnectionAndAlreadyUnlocked(txt)){ 
         dispatch({
             type:CONNECT_UNLOCKED
         })
@@ -59,8 +66,7 @@ const dispatchUnlockedIfNotUnlocking=dispatch=>txt=>{
     return txt
 }
 const dispatchResultIfType=(dispatch, type)=>txt=>{
-    console.log(txt)
-    if(txt!=='Not Found'&&type){
+    if(hasNoConnection(txt)&&type){
         dispatch({
             type,
             value:JSON.parse(txt)

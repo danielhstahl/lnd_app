@@ -72,9 +72,9 @@ export const ChainStats=({message, info, classes})=>{
 ChainStats.propTypes={
     message:PropTypes.string.isRequired,
     info:PropTypes.shape({
-        num_peers:PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+        num_peers:PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         testnet:PropTypes.bool,
-        block_height:PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+        block_height:PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         synced_to_chain:PropTypes.bool
     }).isRequired,
     classes:PropTypes.shape({

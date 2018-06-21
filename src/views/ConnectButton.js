@@ -16,7 +16,8 @@ const styles={
     }
 }
 const PrimaryColorProgress=withStyles(styles)(({classes})=><CircularProgress className={classes.progress}/>)
-const LndButton=({
+/**Exporting for testing */
+export const LndButton=({
     handleConnect,
     isConnecting,
     children,

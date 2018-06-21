@@ -16,7 +16,7 @@ import AsyncHOC from "components/Utils/AsyncHOC"
 import {getInvoices} from '../Actions/connectActions'
 import {CONNECTION_UNLOCKED} from '../Reducers/connectReducer'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
-
+import StandardLightningError from './StandardLightningError'
 
 
 const columnNames=['tx_hash', 'amount', 'confirmations', 'time', 'fees']
@@ -49,22 +49,7 @@ const Invoices=withStyles(styles)(({connectionStatus, invoices, encryptedMacaroo
         </GridItem>
         </Grid>
     </AsyncHOC>
-):(
-    <Grid container>
-    <GridItem xs={12} sm={12} md={4}>
-        <Card profile>
-            <CardBody profile>
-            <p className={classes.description}>
-                Not connected to the Lightning Network!  Go to settings to connect to update connection settings.
-            </p>
-            <Button color="primary" component={Link} to='/settings' >
-                Settings
-            </Button>
-            </CardBody>
-        </Card>
-    </GridItem>
-    </Grid>
-))
+):<StandardLightningError classes={classes}/>)
 Invoices.propTypes={
     connectionStatus:PropTypes.string.isRequired,
     encryptedMacaroon:PropTypes.string,

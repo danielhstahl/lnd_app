@@ -43,4 +43,8 @@ describe('functionality', ()=>{
         const chainStats=mount(<ChainStats info={info}  classes={classes} message={CONNECTION_UNLOCKED}/>)
         expect(chainStats.find('span').text()).toEqual('Peers: 5Network: TestNetBlock Height: 300')
     })
+    it('shows disconnected if not attempted to connect', ()=>{
+        const chainStats=mount(<ChainStats info={info}  classes={classes} message={NO_ATTEMPT}/>)
+        expect(chainStats.html().startsWith('<div>Status: Disconnected')).toEqual(true)
+    })
 })

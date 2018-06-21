@@ -16,6 +16,8 @@ import AsyncHOC from "components/Utils/AsyncHOC"
 import {getTransactions} from '../Actions/connectActions'
 import {CONNECTION_UNLOCKED} from '../Reducers/connectReducer'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
+import StandardLightningError from './StandardLightningError'
+
 const columnNames=['tx_hash', 'amount', 'confirmations', 'time', 'fees']
 const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amount, num_confirmations, time_stamp, total_fees})=>[
     tx_hash,
@@ -24,7 +26,7 @@ const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amoun
     (new Date(convertNixTimestamp(time_stamp))).toLocaleDateString("en-US"),
     convertBTC(total_fees)
 ]):[]
-const Transactions=withStyles(styles)(({connectionStatus, transactions, encryptedMacaroon, password, classes, getTransactions})=>connectionStatus===CONNECTION_UNLOCKED?(
+export const Transactions=withStyles(styles)(({connectionStatus, transactions, encryptedMacaroon, password, classes, getTransactions})=>connectionStatus===CONNECTION_UNLOCKED?(
     <AsyncHOC onLoad={getTransactions({password, encryptedMacaroon})}>
         <Grid container>
         <GridItem xs={12} sm={12} md={12}>
@@ -46,22 +48,7 @@ const Transactions=withStyles(styles)(({connectionStatus, transactions, encrypte
         </GridItem>
         </Grid>
     </AsyncHOC>
-):(
-    <Grid container>
-    <GridItem xs={12} sm={12} md={4}>
-        <Card profile>
-            <CardBody profile>
-            <p className={classes.description}>
-                Not connected to the Lightning Network!  Go to settings to connect to update connection settings.
-            </p>
-            <Button color="primary" component={Link} to='/settings' >
-                Settings
-            </Button>
-            </CardBody>
-        </Card>
-    </GridItem>
-    </Grid>
-))
+):<StandardLightningError classes={classes}/>)
 Transactions.propTypes={
     connectionStatus:PropTypes.string.isRequired,
     transactions:PropTypes.shape({
