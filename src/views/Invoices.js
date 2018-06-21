@@ -13,19 +13,22 @@ import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx"
 import CardBody from "components/Card/CardBody.jsx"
 import AsyncHOC from "components/Utils/AsyncHOC"
-import {getTransactions} from '../Actions/connectActions'
+import {getInvoices} from '../Actions/connectActions'
 import {CONNECTION_UNLOCKED} from '../Reducers/connectReducer'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
+
+
+
 const columnNames=['tx_hash', 'amount', 'confirmations', 'time', 'fees']
-const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amount, num_confirmations, time_stamp, total_fees})=>[
+const parseData=({invoices})=>invoices?invoices.map(({tx_hash, amount, num_confirmations, time_stamp, total_fees})=>[
     tx_hash,
     convertBTC(amount), 
     num_confirmations,
     (new Date(convertNixTimestamp(time_stamp))).toLocaleDateString("en-US"),
     convertBTC(total_fees)
 ]):[]
-const Transactions=withStyles(styles)(({connectionStatus, transactions, encryptedMacaroon, password, classes, getTransactions})=>connectionStatus===CONNECTION_UNLOCKED?(
-    <AsyncHOC onLoad={getTransactions({password, encryptedMacaroon})}>
+const Invoices=withStyles(styles)(({connectionStatus, invoices, encryptedMacaroon, password, classes, getInvoices})=>connectionStatus===CONNECTION_UNLOCKED?(
+    <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
         <Grid container>
         <GridItem xs={12} sm={12} md={12}>
             <Card>
@@ -39,7 +42,7 @@ const Transactions=withStyles(styles)(({connectionStatus, transactions, encrypte
                 <Table
                 tableHeaderColor="primary"
                 tableHead={columnNames}
-                tableData={parseData(transactions)}
+                tableData={parseData(invoices)}
                 />
             </CardBody>
             </Card>
@@ -62,17 +65,8 @@ const Transactions=withStyles(styles)(({connectionStatus, transactions, encrypte
     </GridItem>
     </Grid>
 ))
-Transactions.propTypes={
+Invoices.propTypes={
     connectionStatus:PropTypes.string.isRequired,
-    transactions:PropTypes.shape({
-        transactions:PropTypes.arrayOf(PropTypes.shape({
-            tx_hash:PropTypes.string.isRequired,
-            amount:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
-            num_confirmations:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
-            time_stamp:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
-            total_fees:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired
-        }))
-    }),
     encryptedMacaroon:PropTypes.string,
     password:PropTypes.string,
     classes:PropTypes.shape({
@@ -85,16 +79,15 @@ Transactions.propTypes={
 const mapStateToProps=({signin, connection, network, encryptedMacaroon})=>({
     password:signin.password,
     encryptedMacaroon,
-    transactions:network.transactions,
+    invoices:network.invoices,
     connectionStatus:connection.connectionStatus
 })
 
 const mapDispatchToProps=dispatch=>({
-    getTransactions:getTransactions(dispatch)
+    getInvoices:getInvoices(dispatch)
 })
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Transactions)
-
+)(Invoices)

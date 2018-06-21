@@ -6,10 +6,11 @@ import {
     GET_INFO,
     GET_BALANCE,
     GET_TRANSACTIONS,
-    JUST_UPDATED
+    JUST_UPDATED,
+    GET_INVOICES
 } from './actionDefinitions'
 import crypto from 'crypto'
-
+import {delay} from '../utils/componentUtils'
 const formUrl=(...extensions)=>`/v1/${extensions.join('/')}`
 
 const getLightningRequest=({macaroon, method, endpoint, origin, body})=>{
@@ -49,8 +50,8 @@ const dispatchLockedIfNotFound=dispatch=>txt=>{
     }
     return txt
 }
-const dispatchUnlockedIfUnlocked=dispatch=>txt=>{
-    if(txt!=='Not Found'){
+const dispatchUnlockedIfNotUnlocking=dispatch=>txt=>{
+    if(txt!=='Not Found'&&txt!=='{"error":"context canceled","code":1}'){ //for some odd reason, unlocking returns this error even when successful
         dispatch({
             type:CONNECT_UNLOCKED
         })
@@ -58,6 +59,7 @@ const dispatchUnlockedIfUnlocked=dispatch=>txt=>{
     return txt
 }
 const dispatchResultIfType=(dispatch, type)=>txt=>{
+    console.log(txt)
     if(txt!=='Not Found'&&type){
         dispatch({
             type,
@@ -74,7 +76,7 @@ const dispatchError=dispatch=>err=>{
 const checkWhetherFound=(dispatch, type)=>res=>Promise.resolve(res.text())
     .then(trimStr)
     .then(dispatchLockedIfNotFound(dispatch))
-    .then(dispatchUnlockedIfUnlocked(dispatch))
+    .then(dispatchUnlockedIfNotUnlocking(dispatch))
     .then(dispatchResultIfType(dispatch, type))
     .catch(dispatchError(dispatch))
 
@@ -118,11 +120,12 @@ const unlockWalletLocal=dispatch=>({macaroon, walletPassword})=>{
         macaroon, 
         method:'POST', 
         endpoint:formUrl('unlockwallet'),
-        body:JSON.stringify({wallet_password:walletPassword})
+        body:JSON.stringify({wallet_password:btoa(walletPassword)})
     })
-    return fetch(req)
-        .then(checkWhetherFound(dispatch))
-        .then(generateNotify(dispatch))
+    return fetch(req) //oddly enough, returns {"error":"context canceled","code":1}
+        .then(checkWhetherFound(dispatch)) //successfully unlocks
+        .then(()=>delay(20000))
+        .then(()=>checkConnectionLocal(dispatch)({macaroon})) //but then this fails.  Does it take some time to unlock??
 }
 
 const getTransactionsLocal=dispatch=>({macaroon})=>{
@@ -135,10 +138,21 @@ const getTransactionsLocal=dispatch=>({macaroon})=>{
         .then(checkWhetherFound(dispatch, GET_TRANSACTIONS))
 }
 
+const getInvoicesLocal=dispatch=>({macaroon})=>{
+    const req=getLightningRequest({
+        macaroon, 
+        method:'GET', 
+        endpoint:formUrl('invoices')
+    })
+    return fetch(req)
+        .then(checkWhetherFound(dispatch, GET_INVOICES))
+}
+
 export const checkConnection=connectFactory(checkConnectionLocal)
 export const unlockWallet=connectFactory(unlockWalletLocal)
 export const getBalance=connectFactory(getBalanceLocal)
 export const getTransactions=connectFactory(getTransactionsLocal)
+export const getInvoices=connectFactory(getInvoicesLocal)
 
 
 export const getInfo=dispatch=>()=>{

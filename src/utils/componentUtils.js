@@ -16,3 +16,7 @@ export const filterMessageVariant=message=>{
             return 'info'
     }
 }
+
+export const delay=ms=>new Promise((resolve, _)=>{
+    setTimeout(()=>resolve(), ms)
+})
