@@ -1,28 +1,28 @@
-import {Home} from 'views/Home'
 import React from 'react'
+import 'index.css'
+import Home from 'views/Home'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
 import { shallow, mount } from 'enzyme'
-import {MemoryRouter} from 'react-router-dom'
+import { createStore } from 'redux'
+import reducer from 'Reducers/reducers'
+import 'typeface-roboto'
+import registerServiceWorker from 'registerServiceWorker'
+import 'assets/css/material-dashboard-react.css'
+import {
+    MemoryRouter as Router,
+    Route
+} from 'react-router-dom'
+const store = createStore(reducer)
+
 describe('render', ()=>{
-    const classes={
-        mainPanel:{},
-        content:{},
-        container:{}
-    }
-    const location={
-        pathname:'hello'
-    }
-    it('renders without error when drawer toggled on', ()=>{
+    it('renders without error', ()=>{
         mount(
-        <MemoryRouter>
-            <Home toggleDrawer={()=>{}} drawer={true} classes={classes} location={location} />
-        </MemoryRouter>
-        )
-    })
-    it('renders without error when drawer toggled off', ()=>{
-        mount(
-        <MemoryRouter>
-            <Home toggleDrawer={()=>{}} drawer={false} classes={classes} location={location}/>
-        </MemoryRouter>
+            <Provider store={store}>
+                <Router>
+                    <Route path='/' component={Home}/>
+                </Router>
+            </Provider>
         )
     })
 })

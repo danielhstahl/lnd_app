@@ -4,7 +4,7 @@ import {
     SET_ENCRYPTED_MACAROON
 } from '../Actions/actionDefinitions'
 import {encryptedMacaroon} from '../utils/localStorage'
-export const encryptedMacaroonReducer=(state=encryptedMacaroon, action)=>{
+export const encryptedMacaroonReducer=(state=encryptedMacaroon||null, action)=>{
     switch(action.type){
         case REMOVE_MACAROON:
             return ''

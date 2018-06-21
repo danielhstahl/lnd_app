@@ -12,7 +12,7 @@ import "assets/css/material-dashboard-react.css?v=1.3.0"
 import {
     HashRouter as Router,
     Route
-  } from 'react-router-dom'
+} from 'react-router-dom'
 const store = createStore(reducer)
 
 render(
