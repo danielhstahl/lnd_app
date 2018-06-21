@@ -4,12 +4,12 @@ import PropTypes from 'prop-types'
 import Button from "components/CustomButtons/Button"
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
-import Grid from "@material-ui/core/Grid";
+import Grid from "@material-ui/core/Grid"
 // core components
 import {convertBTC, convertNixTimestamp} from '../utils/btcUtils'
 import GridItem from "components/Grid/GridItem.jsx"
 import Table from 'components/Table/Table'
-import Card from "components/Card/Card.jsx";
+import Card from "components/Card/Card.jsx"
 import CardHeader from "components/Card/CardHeader.jsx"
 import CardBody from "components/Card/CardBody.jsx"
 import AsyncHOC from "components/Utils/AsyncHOC"
@@ -27,7 +27,7 @@ const parseData=({invoices})=>invoices?invoices.map(({tx_hash, amount, num_confi
     (new Date(convertNixTimestamp(time_stamp))).toLocaleDateString("en-US"),
     convertBTC(total_fees)
 ]):[]
-const Invoices=withStyles(styles)(({connectionStatus, invoices, encryptedMacaroon, password, classes, getInvoices})=>connectionStatus===CONNECTION_UNLOCKED?(
+export const Invoices=withStyles(styles)(({connectionStatus, invoices, encryptedMacaroon, password, classes, getInvoices})=>connectionStatus===CONNECTION_UNLOCKED?(
     <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
         <Grid container>
         <GridItem xs={12} sm={12} md={12}>
