@@ -48,13 +48,20 @@ const filterInfo=(message, info)=>{
             return ''
     }
 }
-
+const filterStatus=(message, info)=>{
+    switch(message){
+        case NO_ATTEMPT:
+            return 'Disconnected'
+        default:
+            return info.synced_to_chain?"Synced":"Syncing..."
+    }
+}
 export const ChainStats=({message, info, classes})=>{
     const variant =filterMessageVariant(message)
     const Icon = variantIcon[variant]
     return (
     <div>
-        Status: {message===NO_ATTEMPT?'Disconnected':(info.synced_to_chain?"Synced":"Syncing...")}
+        Status: {filterStatus(message, info)}
         <div className={classNames(classes.logoImage, classes[variant+'Icon'])}>
             <Icon className={classes.img}/>
         </div>
