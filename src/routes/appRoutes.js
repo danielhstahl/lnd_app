@@ -1,6 +1,7 @@
 import Dashboard from "@material-ui/icons/Dashboard"
 import Person from "@material-ui/icons/Person"
 import Transactions from '../views/Transactions'
+import Invoices from '../views/Invoices'
 import ContentPaste from "@material-ui/icons/ContentPaste"
 import LibraryBooks from "@material-ui/icons/LibraryBooks"
 import BubbleChart from "@material-ui/icons/BubbleChart"
@@ -22,7 +23,7 @@ export default [
       sidebarName: "View Invoices",
       navbarName: "View Invoices",
       icon: ContentPaste,
-      component: Transactions //add invoices
+      component: Invoices 
     },
     {
       path: "/settings",
