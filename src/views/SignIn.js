@@ -86,9 +86,6 @@ const SignIn=withStyles(styles)(({
                         styles={{disabled:notAllItemsExist({
                             macaroon:getWhetherMacaroonExists(macaroon, encryptedMacaroon), password
                         }), ...style}}
-                        /*disabled={notAllItemsExist({
-                            macaroon:getWhetherMacaroonExists(macaroon, encryptedMacaroon), password
-                        })}*/
                     >
                         {encryptedMacaroon?'Connect':'Save and Connect'}
                     </ConnectButton>
@@ -97,8 +94,7 @@ const SignIn=withStyles(styles)(({
             </Card>
         </GridItem>
     </Grid>
-    )
-)
+))
 
 SignIn.propTypes={
     macaroon:PropTypes.string,
@@ -107,8 +103,8 @@ SignIn.propTypes={
     encryptedMacaroon:PropTypes.string,
     removeMacaroon:PropTypes.func.isRequired,
     classes:PropTypes.shape({
-        cardTitleWhite:PropTypes.object.isRequired,
-        cardCategoryWhite:PropTypes.object.isRequired
+        cardTitleWhite:PropTypes.string.isRequired,
+        cardCategoryWhite:PropTypes.string.isRequired
     }).isRequired
 }
 

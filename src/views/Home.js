@@ -58,9 +58,9 @@ Home.propTypes={
     toggleDrawer:PropTypes.func.isRequired,
     drawer:PropTypes.bool.isRequired,
     classes:PropTypes.shape({
-        mainPanel:PropTypes.object,
-        content:PropTypes.object,
-        container:PropTypes.object
+        mainPanel:PropTypes.string,
+        content:PropTypes.string,
+        container:PropTypes.string
     }).isRequired,
     location:PropTypes.shape({
         pathname:PropTypes.string.isRequired

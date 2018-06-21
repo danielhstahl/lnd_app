@@ -33,7 +33,6 @@ const UnlockWallet=({ walletPassword, updateSignIn, connectionStatus})=>CONNECTI
         <CardFooter key='walletfooter'>
             <UnlockWalletButton 
                 styles={{disabled:!walletPassword, ...style}}
-                //disabled={!walletPassword}
             >
                 Unlock
             </UnlockWalletButton>

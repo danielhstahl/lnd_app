@@ -26,3 +26,14 @@ describe('render', ()=>{
         )
     })
 })
+describe('integrations', ()=>{
+    it('correctly renders settings on start', ()=>{
+        mount(
+            <Provider store={store}>
+                <Router>
+                    <Route path='/' component={Home}/>
+                </Router>
+            </Provider>
+        )
+    })
+})

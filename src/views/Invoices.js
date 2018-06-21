@@ -55,8 +55,8 @@ Invoices.propTypes={
     encryptedMacaroon:PropTypes.string,
     password:PropTypes.string,
     classes:PropTypes.shape({
-        cardTitleWhite:PropTypes.object.isRequired,
-        cardCategoryWhite:PropTypes.object.isRequired
+        cardTitleWhite:PropTypes.string.isRequired,
+        cardCategoryWhite:PropTypes.string.isRequired
     }).isRequired,
     getTransactions:PropTypes.func.isRequired
 }
