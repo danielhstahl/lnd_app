@@ -28,6 +28,8 @@ const connectionStatus=(state=NO_ATTEMPT, action)=>{
 const boolReducerGenerator=type=>(state=false, action)=>{
     switch(action.type){
         case type:
+            console.log(type)
+            console.log(action.value)
             return action.value
         default:
             return state    

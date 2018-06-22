@@ -131,7 +131,7 @@ describe('integrations', ()=>{
 
     })
     it('correctly shows errors when password and macaroon are entered but does not connect', ()=>{
-        fetch.mockResponseOnce(' Not Found')
+        fetch.mockResponses(['Not Found '], ['Not Found ']) //both results are not found
         const app=mount(
             <Provider store={store}>
                 <Router>
@@ -150,16 +150,23 @@ describe('integrations', ()=>{
         const passwordInput=app.findWhere(val=>textContent(val)==='Password').find(Input)
         expect(passwordInput.length).toEqual(1)
         passwordInput.props().onChange({target:{value:'password'}})
-
+        app.update() 
         /**Simulate click of button */
         const conButton=app.find(ConnectButton).find(Button)
         expect(conButton.text()).toEqual('Save and Connect')
         conButton.props().onClick()
-
+        //console.log(conButton.props())
+        //setTimeout(()=>{
         app.update() 
+        expect(fetch.mock.calls.length).toEqual(2)
+        //setTimeout(()=>{
         expect(app.find(Snackbar).props().color).toEqual('warning')
         expect(app.find(Snackbar).props().message).toEqual('Connection could not be established!')  
         expect(app.find(Snackbar).props().open).toEqual(true)  
+        //}, 60)
+        
+
+        
        // console.log(app.find(Snackbar).props())
 
         
