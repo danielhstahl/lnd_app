@@ -40,7 +40,8 @@ const style={color:"primary"}
 const SignIn=withStyles(styles)(({
     classes, macaroon, 
     password, encryptedMacaroon,
-    updateSignIn, removeMacaroon
+    updateSignIn, removeMacaroon,
+    passwordError
 })=>(
     <Grid container>
         <GridItem xs={12} sm={12} md={8}>
@@ -77,6 +78,7 @@ const SignIn=withStyles(styles)(({
                                 onChange:updateSignIn('password'),
                                 type:'password'
                             }}
+                            error={passwordError}
                         />
                     </GridItem>
                     </Grid>
@@ -108,9 +110,10 @@ SignIn.propTypes={
     }).isRequired
 }
 
-const mapStateToProps=({signin, encryptedMacaroon})=>({
+const mapStateToProps=({signin, encryptedMacaroon, passwordError})=>({
     encryptedMacaroon,
-    ...signin
+    ...signin,
+    passwordError
 })
 const mapDispatchToProps=dispatch=>({
     updateSignIn:updateSignIn(dispatch),
