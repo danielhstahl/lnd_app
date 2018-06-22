@@ -7,7 +7,7 @@ import { createStore } from 'redux'
 import reducer from './Reducers/combineReducers'
 import registerServiceWorker from './registerServiceWorker'
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
   } from 'react-router-dom'
 const store = createStore(reducer)
 
