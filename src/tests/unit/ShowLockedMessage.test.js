@@ -1,11 +1,11 @@
-import {ShowLockedMessage} from 'components/utils/ShowLockedMessage'
+import {ShowLockedMessage} from 'components/Utils/ShowLockedMessage'
 import React from 'react'
-import { shallow, mount } from 'enzyme'
+import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
 import reducer from 'Reducers/reducers'
 import {MemoryRouter} from 'react-router-dom'
 import { createStore } from 'redux'
-import StandardLightningError from 'components/utils/StandardLightningError'
+import StandardLightningError from 'components/Utils/StandardLightningError'
 const store = createStore(reducer)
 import {
     CONNECTION_UNLOCKED, 

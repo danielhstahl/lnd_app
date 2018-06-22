@@ -4,21 +4,18 @@ import {
     SET_ENCRYPTED_MACAROON
 } from 'Actions/actionDefinitions'
 import Home from 'views/Home'
-import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { shallow, mount } from 'enzyme'
+import {  mount } from 'enzyme'
 import { createStore } from 'redux'
 import reducer from 'Reducers/reducers'
 import 'typeface-roboto'
-import registerServiceWorker from 'registerServiceWorker'
 import 'assets/css/material-dashboard-react.css'
 import SignIn from 'views/SignIn'
-import StandardLightningError from 'components/utils/StandardLightningError'
-import CustomInput from 'components/CustomInput/CustomInput.jsx'
 import InputLabel from "@material-ui/core/InputLabel"
 import Input from "@material-ui/core/Input"
 import Button from 'components/CustomButtons/Button'
 import {ConnectButton} from 'views/ConnectButton'
+import Snackbar from 'components/Snackbar/Snackbar'
 import {
     MemoryRouter as Router,
     Route
@@ -159,7 +156,11 @@ describe('integrations', ()=>{
         expect(conButton.text()).toEqual('Save and Connect')
         conButton.props().onClick()
 
-        app.update()   
+        app.update() 
+        expect(app.find(Snackbar).props().color).toEqual('warning')
+        expect(app.find(Snackbar).props().message).toEqual('Connection could not be established!')  
+        expect(app.find(Snackbar).props().open).toEqual(true)  
+       // console.log(app.find(Snackbar).props())
 
         
 
