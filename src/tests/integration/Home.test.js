@@ -9,6 +9,7 @@ import reducer from 'Reducers/reducers'
 import 'typeface-roboto'
 import registerServiceWorker from 'registerServiceWorker'
 import 'assets/css/material-dashboard-react.css'
+import SignIn from 'views/SignIn'
 import {
     MemoryRouter as Router,
     Route
@@ -28,12 +29,13 @@ describe('render', ()=>{
 })
 describe('integrations', ()=>{
     it('correctly renders settings on start', ()=>{
-        mount(
+        const app=mount(
             <Provider store={store}>
                 <Router>
                     <Route path='/' component={Home}/>
                 </Router>
             </Provider>
         )
+        expect(app.find(SignIn).length).toEqual(1)
     })
 })
