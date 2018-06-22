@@ -3,6 +3,10 @@ import React from 'react'
 import { shallow, mount } from 'enzyme'
 import {CONNECTION_UNLOCKED} from 'Reducers/connectReducer'
 import {MemoryRouter} from 'react-router-dom'
+import { Provider } from 'react-redux'
+import reducer from 'Reducers/reducers'
+import { createStore } from 'redux'
+const store = createStore(reducer)
 describe('render', ()=>{
     const getInvoices=val=>val=>val
     const classes={
@@ -19,25 +23,25 @@ describe('render', ()=>{
         }
     ]
     it('renders without error with no connection', ()=>{
-        mount(<MemoryRouter><Invoices 
+        mount(<Provider store={store}><MemoryRouter><Invoices 
             getInvoices={getInvoices}
             connectionStatus={'something'}
             invoices={data}
             encryptedMacaroon='s'
             password='s'
             classes={classes}
-            /></MemoryRouter>
+            /></MemoryRouter></Provider>
         )
     })
     it('renders without error with connection', ()=>{
-        mount(<MemoryRouter><Invoices 
+        mount(<Provider store={store}><MemoryRouter><Invoices 
             getInvoices={getInvoices}
             connectionStatus={CONNECTION_UNLOCKED}
             invoices={data}
             encryptedMacaroon='s'
             password='s'
             classes={classes}
-            /></MemoryRouter>
+            /></MemoryRouter></Provider>
         )
     })
 

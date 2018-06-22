@@ -16,7 +16,7 @@ import AsyncHOC from "components/Utils/AsyncHOC"
 import {getInvoices} from '../Actions/connectActions'
 import {CONNECTION_UNLOCKED} from '../Reducers/connectReducer'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
-import StandardLightningError from './StandardLightningError'
+import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
 
 
 const columnNames=['tx_hash', 'amount', 'confirmations', 'time', 'fees']
@@ -27,7 +27,8 @@ const parseData=({invoices})=>invoices?invoices.map(({tx_hash, amount, num_confi
     (new Date(convertNixTimestamp(time_stamp))).toLocaleDateString("en-US"),
     convertBTC(total_fees)
 ]):[]
-export const Invoices=withStyles(styles)(({connectionStatus, invoices, encryptedMacaroon, password, classes, getInvoices})=>connectionStatus===CONNECTION_UNLOCKED?(
+export const Invoices=withStyles(styles)(({invoices, encryptedMacaroon, password, classes, getInvoices})=>(
+<ShowLockedMessage>
     <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
         <Grid container>
         <GridItem xs={12} sm={12} md={12}>
@@ -49,23 +50,22 @@ export const Invoices=withStyles(styles)(({connectionStatus, invoices, encrypted
         </GridItem>
         </Grid>
     </AsyncHOC>
-):<StandardLightningError classes={classes}/>)
+</ShowLockedMessage>
+))
 Invoices.propTypes={
-    connectionStatus:PropTypes.string.isRequired,
     encryptedMacaroon:PropTypes.string,
     password:PropTypes.string,
     classes:PropTypes.shape({
         cardTitleWhite:PropTypes.string.isRequired,
         cardCategoryWhite:PropTypes.string.isRequired
     }).isRequired,
-    getTransactions:PropTypes.func.isRequired
+    getInvoices:PropTypes.func.isRequired
 }
 
-const mapStateToProps=({signin, connection, network, encryptedMacaroon})=>({
+const mapStateToProps=({signin, network, encryptedMacaroon})=>({
     password:signin.password,
     encryptedMacaroon,
-    invoices:network.invoices,
-    connectionStatus:connection.connectionStatus
+    invoices:network.invoices
 })
 
 const mapDispatchToProps=dispatch=>({

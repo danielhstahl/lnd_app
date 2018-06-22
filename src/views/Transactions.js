@@ -14,9 +14,8 @@ import CardHeader from "components/Card/CardHeader.jsx"
 import CardBody from "components/Card/CardBody.jsx"
 import AsyncHOC from "components/Utils/AsyncHOC"
 import {getTransactions} from '../Actions/connectActions'
-import {CONNECTION_UNLOCKED} from '../Reducers/connectReducer'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
-import StandardLightningError from './StandardLightningError'
+import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
 
 const columnNames=['tx_hash', 'amount', 'confirmations', 'time', 'fees']
 const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amount, num_confirmations, time_stamp, total_fees})=>[
@@ -26,7 +25,8 @@ const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amoun
     (new Date(convertNixTimestamp(time_stamp))).toLocaleDateString("en-US"),
     convertBTC(total_fees)
 ]):[]
-export const Transactions=withStyles(styles)(({connectionStatus, transactions, encryptedMacaroon, password, classes, getTransactions})=>connectionStatus===CONNECTION_UNLOCKED?(
+export const Transactions=withStyles(styles)(({transactions, encryptedMacaroon, password, classes, getTransactions})=>(
+<ShowLockedMessage>
     <AsyncHOC onLoad={getTransactions({password, encryptedMacaroon})}>
         <Grid container>
         <GridItem xs={12} sm={12} md={12}>
@@ -48,9 +48,9 @@ export const Transactions=withStyles(styles)(({connectionStatus, transactions, e
         </GridItem>
         </Grid>
     </AsyncHOC>
-):<StandardLightningError classes={classes}/>)
+</ShowLockedMessage>
+))
 Transactions.propTypes={
-    connectionStatus:PropTypes.string.isRequired,
     transactions:PropTypes.shape({
         transactions:PropTypes.arrayOf(PropTypes.shape({
             tx_hash:PropTypes.string.isRequired,
@@ -69,11 +69,10 @@ Transactions.propTypes={
     getTransactions:PropTypes.func.isRequired
 }
 
-const mapStateToProps=({signin, connection, network, encryptedMacaroon})=>({
+const mapStateToProps=({signin, network, encryptedMacaroon})=>({
     password:signin.password,
     encryptedMacaroon,
-    transactions:network.transactions,
-    connectionStatus:connection.connectionStatus
+    transactions:network.transactions
 })
 
 const mapDispatchToProps=dispatch=>({

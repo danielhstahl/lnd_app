@@ -5,7 +5,16 @@ import GridItem from "components/Grid/GridItem.jsx"
 import { Link } from 'react-router-dom'
 import CardBody from "components/Card/CardBody.jsx"
 import Card from "components/Card/Card.jsx"
-export default ({classes})=>(
+import { withStyles } from '@material-ui/core/styles'
+
+const styles={
+    description:{
+        textAlign:'left'
+    }
+}
+
+
+export default withStyles(styles)(({classes})=>(
 <Grid container>
     <GridItem xs={12} sm={12} md={4}>
         <Card profile>
@@ -20,4 +29,4 @@ export default ({classes})=>(
         </Card>
     </GridItem>
 </Grid>
-)
+))
