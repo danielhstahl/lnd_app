@@ -2,7 +2,7 @@ import signin, {encryptedMacaroonReducer, passwordReducer} from './signInReducer
 import connection from './connectReducer'
 import drawer from './homeReducer'
 import network from './networkInformation'
-import invoices from './invoiceReducer'
+import invoice, {paymentRequest} from './invoiceReducer'
 import qr from './qrReducer'
 import {combineReducers} from 'redux'
 
@@ -13,6 +13,7 @@ export default combineReducers({
     network,
     encryptedMacaroon:encryptedMacaroonReducer,
     passwordError:passwordReducer,
-    invoices,
+    invoice,
+    paymentRequest,
     qr
 })

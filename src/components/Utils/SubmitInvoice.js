@@ -1,28 +1,40 @@
 import React from 'react'
 import { connect } from 'react-redux' 
-import TextField from '@material-ui/core/TextField'
-import {createInvoice} from 'Actions/connectActions'
-import {updateInvoiceAmount} from 'Actions/invoiceActions'
-import { convertBTCToSatoshi } from '../../utils/btcUtils'
-import Button from 'components/CustomButtons/Button'
-export const SubmitInvoice=({invoiceAmount, createInvoice, updateInvoiceAmount})=>[
-    <TextField
-        autoFocus
-        margin="dense"
-        type="number"
-        fullWidth
-        value={invoiceAmount}
-        onChange={updateInvoiceAmount}
+import {updateInvoice} from 'Actions/invoiceActions'
+import {CreateInvoiceButton} from 'views/ConnectButton'
+import CustomInput from 'components/CustomInput/CustomInput'
+const formControlProps={fullWidth:true}
+const styles={color:'primary'}
+export const SubmitInvoice=({amount, memo, updateInvoice})=>[
+    <CustomInput
+        inputProps={{
+            value:amount, 
+            onChange:updateInvoice('amount')
+        }}
         key='invoiceamt'
+
+        labelText='Enter Invoice Amount'
+        formControlProps={formControlProps}
     />,
-    <Button onClick={createInvoice({value:convertBTCToSatoshi(invoiceAmount)})} key='submitinv'>Create</Button>
+    <CustomInput
+        inputProps={{
+            value:memo, 
+            onChange:updateInvoice('memo')
+        }}
+        key='memo'
+        labelText='Enter Memo'
+        formControlProps={formControlProps}
+    />,
+    <CreateInvoiceButton 
+        styles={styles} 
+        key='submitinv'
+    >
+        Create Invoice
+    </CreateInvoiceButton>
 ]
-const mapStateToProps=({invoices})=>({
-    invoiceAmount:invoices.amount
-})
+const mapStateToProps=({invoice})=>invoice
 const mapDispatchToProps=dispatch=>({
-    createInvoice:createInvoice(dispatch),
-    updateInvoiceAmount:updateInvoiceAmount(dispatch)
+    updateInvoice:updateInvoice(dispatch)
 })
 export default connect(
     mapStateToProps,

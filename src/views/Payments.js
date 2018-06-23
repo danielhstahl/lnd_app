@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
 import SubmitInvoice from 'components/Utils/SubmitInvoice'
 import { withStyles } from '@material-ui/core/styles'
+import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 import {getInvoices} from 'Actions/connectActions'
 import Button from 'components/CustomButtons/Button'
@@ -25,7 +26,7 @@ const parseData=({invoices}, showQR)=>invoices?invoices.map(({memo, payment_requ
     convertSatoshiToBTC(value),
     convertDateToString(convertNixTimestamp(creation_date))
 ]):[]
-
+const marginTop={marginTop:16}
 export const PendingInvoices=withStyles(styles)(({
     invoices, encryptedMacaroon, 
     password, classes, 
@@ -34,8 +35,8 @@ export const PendingInvoices=withStyles(styles)(({
 })=>(
     <ShowLockedMessage>
         <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
-            <QRView qrRaw={paymentRequest}/>
             <Grid container>
+            <QRView qrRaw={paymentRequest}/>
             <GridItem xs={12} sm={12} md={6}>
                 <Card>
                 <CardHeader color="primary">
@@ -43,9 +44,10 @@ export const PendingInvoices=withStyles(styles)(({
                     <p className={classes.cardCategoryWhite}>
                     Invoices for this account
                     </p>
-                   <SubmitInvoice/>
                 </CardHeader>
                 <CardBody>
+                    <SubmitInvoice/>
+                    <Divider style={marginTop}/>
                     <Table
                         tableHeaderColor="primary"
                         tableHead={columnNames}
@@ -59,11 +61,11 @@ export const PendingInvoices=withStyles(styles)(({
     </ShowLockedMessage>
 ))
 
-const mapStateToProps=({invoices, network, encryptedMacaroon, signin})=>({
+const mapStateToProps=({paymentRequest, network, encryptedMacaroon, signin})=>({
     password:signin.password,
     encryptedMacaroon,
     invoices:network.invoices,
-    paymentRequest:invoices.paymentRequest
+    paymentRequest
 })
 const showQR=dispatch=>paymentRequest=>()=>{
     toggleQRShow(dispatch)()

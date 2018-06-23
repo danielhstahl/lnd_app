@@ -1,14 +1,14 @@
-import { SET_CURRENT_INVOICE_AMOUNT, SET_CURRENT_PAYMENT_REQUEST } from "./actionDefinitions";
+import { ENTER_INVOICE, RESET_INVOICE, SET_CURRENT_PAYMENT_REQUEST } from "./actionDefinitions";
 
 
-export const updateInvoiceAmount=dispatch=>e=>dispatch({
-    type:SET_CURRENT_INVOICE_AMOUNT,
+export const updateInvoice=dispatch=>key=>e=>dispatch({
+    type:ENTER_INVOICE,
+    key,
     value:e.target.value
 })
 
-export const resetInvoiceAmount=dispatch=>dispatch({
-    type:SET_CURRENT_INVOICE_AMOUNT,
-    value:''
+export const resetInvoice=dispatch=>dispatch({
+    type:RESET_INVOICE
 })
 
 export const setCurrentPaymentRequest=dispatch=>value=>dispatch({

@@ -9,11 +9,11 @@ import {
     JUST_UPDATED,
     GET_INVOICES,
     PASSWORD_RESET,
-    PASSWORD_ERROR,
-    UPDATE_INVOICES
+    PASSWORD_ERROR
 } from './actionDefinitions'
 import crypto from 'crypto'
 import {delay} from '../utils/componentUtils'
+import { convertBTCToSatoshi } from 'utils/btcUtils'
 const formUrl=(...extensions)=>`/v1/${extensions.join('/')}`
 
 const getLightningRequest=({macaroon, method, endpoint, ...rest})=>{
@@ -172,17 +172,16 @@ const getInvoicesLocal=dispatch=>({macaroon})=>{
         .then(checkWhetherFound(dispatch, GET_INVOICES))
 }
 
-const createInvoiceLocal=dispatch=>({macaroon, value})=>{
+const createInvoiceLocal=dispatch=>({macaroon, amount, memo})=>{
+    console.log(convertBTCToSatoshi(amount))
     const req=getLightningRequest({
         macaroon, 
         method:'POST', 
         endpoint:formUrl('invoices'),
-        body:{
-            value
-        }
+        body:JSON.stringify({value:convertBTCToSatoshi(amount), memo})
     })
     return fetch(req)
-        .then(checkWhetherFound(dispatch, UPDATE_INVOICES))
+        .then(()=>getInvoicesLocal(dispatch)({macaroon}))
 }
 
 export const checkConnection=connectFactory(checkConnectionLocal)
