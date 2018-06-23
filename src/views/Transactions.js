@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from "@material-ui/core/Grid";
 // core components
-import {convertBTC, convertNixTimestamp} from '../utils/btcUtils'
+import {convertBTC, convertNixTimestamp, convertDateToString} from '../utils/btcUtils'
 import GridItem from "components/Grid/GridItem.jsx"
 import Table from 'components/Table/Table'
 import Card from "components/Card/Card.jsx";
@@ -20,7 +20,7 @@ const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amoun
     tx_hash,
     convertBTC(amount), 
     num_confirmations,
-    (new Date(convertNixTimestamp(time_stamp))).toLocaleDateString("en-US"),
+    convertDateToString(convertNixTimestamp(time_stamp)),
     convertBTC(total_fees)
 ]):[]
 export const Transactions=withStyles(styles)(({transactions, encryptedMacaroon, password, classes, getTransactions})=>(

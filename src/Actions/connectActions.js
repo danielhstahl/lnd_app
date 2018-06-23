@@ -15,15 +15,14 @@ import crypto from 'crypto'
 import {delay} from '../utils/componentUtils'
 const formUrl=(...extensions)=>`/v1/${extensions.join('/')}`
 
-const getLightningRequest=({macaroon, method, endpoint, origin, body})=>{
+const getLightningRequest=({macaroon, method, endpoint, ...rest})=>{
     const headers = new Headers({
-        "Grpc-Metadata-macaroon": macaroon,
-        Origin:origin
+        "Grpc-Metadata-macaroon": macaroon
     })
     const requestData={ 
         method,
         headers,
-        body
+        ...rest
     }
     return new Request(endpoint, requestData)
 }
@@ -166,7 +165,7 @@ const getInvoicesLocal=dispatch=>({macaroon})=>{
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
-        endpoint:formUrl('invoices')
+        endpoint:formUrl('invoices?pending_only=true')
     })
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_INVOICES))

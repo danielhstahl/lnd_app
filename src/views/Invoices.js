@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from "@material-ui/core/Grid"
 // core components
-import {convertBTC, convertNixTimestamp} from '../utils/btcUtils'
+import {convertBTC, convertNixTimestamp, convertDateToString} from '../utils/btcUtils'
 import GridItem from "components/Grid/GridItem.jsx"
 import Table from 'components/Table/Table'
 import Card from "components/Card/Card.jsx"
@@ -21,7 +21,7 @@ const parseData=({invoices})=>invoices?invoices.map(({memo, payment_request, val
     memo,
     payment_request, 
     convertBTC(value),
-    (new Date(convertNixTimestamp(creation_date))).toLocaleDateString("en-US")
+    convertDateToString(convertNixTimestamp(creation_date))
 ]):[]
 export const Invoices=withStyles(styles)(({invoices, encryptedMacaroon, password, classes, getInvoices})=>(
 <ShowLockedMessage>
