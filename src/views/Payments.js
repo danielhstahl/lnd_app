@@ -19,7 +19,7 @@ import {
     toggleQRRaw
 } from 'Actions/qrActions'
 const formControlProps={fullWidth:true}
-const style={width:'100%'}
+const style={width:'60%', margin: 'auto'}
 export const Payments=withStyles(styles)(({
     classes, paymentRequest,
     showRaw, updatePaymentRequest,

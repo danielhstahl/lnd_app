@@ -1,43 +1,44 @@
-/**I didn't mean to commit the macaroon, but its only for testnet so whatever */
+const express=require('express')
+const path=require('path')
+const app=express()
 const https=require('https')
-const macaroon='0201036C6E6402BB01030A102D3601726151C09D0F1D4AE89EBDABB41201301A160A0761646472657373120472656164120577726974651A130A04696E666F120472656164120577726974651A170A08696E766F69636573120472656164120577726974651A160A076D657373616765120472656164120577726974651A170A086F6666636861696E120472656164120577726974651A160A076F6E636861696E120472656164120577726974651A140A05706565727312047265616412057772697465000006208D4779FBB9EF54A1606845FB1ED4DD0CE91BE32757C9903A70938437053DE100'
-
-const options={
-   // hostname: '108.70.247.57',
-    hostname: '192.168.1.92',
-    port: 8080,
-    path: '/v1/transactions',
-    method: 'GET',
-    rejectUnauthorized: false,
-    headers:{
-        "Grpc-Metadata-macaroon": macaroon
+const hostname=process.env.HOST_NAME
+const port=process.env.HOST_PORT
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
+app.use(express.static(path.join(__dirname)))
+const sendItemToServer=(req, res)=>{
+    const headerKey='grpc-metadata-macaroon'
+    const getHeader=req.headers[headerKey]
+    const options={
+        path:req.path,
+        hostname,
+        port,
+        headers:{[headerKey]:getHeader},
+        body:req.body,
+        method:req.method,
+        rejectUnauthorized: false,
     }
-}
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
-const req=https.request(options, res=>{
-    res.on('data', (d) => {
-        process.stdout.write(d)
+    let result=''
+    const serverRequest=https.request(options, serverResult=>{
+        serverResult.on('data', d => {
+            result+=d
+        })
+        serverResult.on('end', ()=>{
+            res.send(result)
+        })
     })
+    serverRequest.on('error', err=>{
+        console.log(err)
+    })
+    serverRequest.end()
+    
+
+}
+app.all('/v1/*', sendItemToServer)
+
+app.set('port', (5000))
+
+app.listen(app.get('port'), () => {
+    console.log('Node app is running on port', app.get('port'))
 })
-req.on('error', err=>{
-    console.log(err)
-})
-
-
-
-req.end()
-
-/*
-// Listen on a specific host via the HOST environment variable
-const host = process.env.HOST || '0.0.0.0';
-// Listen on a specific port via the PORT environment variable
-const port = process.env.PORT || 8080;
- 
-var cors_proxy = require('cors-anywhere');
-cors_proxy.createServer({
-    originWhitelist: [], // Allow all origins
-    requireHeader: ['origin', 'x-requested-with'],
-    removeHeaders: ['cookie', 'cookie2']
-}).listen(port, host, function() {
-    console.log('Running CORS Anywhere on ' + host + ':' + port);
-})*/

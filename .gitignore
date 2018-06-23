@@ -24,3 +24,5 @@ yarn-error.log*
 *.proto
 *.base64
 *.macaroon
+macaroon.txt
+nowCommands.txt
