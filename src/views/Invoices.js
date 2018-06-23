@@ -4,14 +4,14 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from "@material-ui/core/Grid"
 // core components
-import {convertBTC, convertNixTimestamp, convertDateToString} from '../utils/btcUtils'
-import GridItem from "components/Grid/GridItem.jsx"
+import {convertSatoshiToBTC, convertNixTimestamp, convertDateToString} from '../utils/btcUtils'
+import GridItem from 'components/Grid/GridItem.jsx'
 import Table from 'components/Table/Table'
 import Card from "components/Card/Card.jsx"
 import CardHeader from "components/Card/CardHeader.jsx"
 import CardBody from "components/Card/CardBody.jsx"
 import AsyncHOC from "components/Utils/AsyncHOC"
-import {getInvoices} from '../Actions/connectActions'
+import {getInvoices} from 'Actions/connectActions'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
 import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
 
@@ -20,7 +20,7 @@ const columnNames=['memo', 'request', 'amount', 'created date']
 const parseData=({invoices})=>invoices?invoices.map(({memo, payment_request, value, creation_date, })=>[
     memo,
     payment_request, 
-    convertBTC(value),
+    convertSatoshiToBTC(value),
     convertDateToString(convertNixTimestamp(creation_date))
 ]):[]
 export const Invoices=withStyles(styles)(({invoices, encryptedMacaroon, password, classes, getInvoices})=>(

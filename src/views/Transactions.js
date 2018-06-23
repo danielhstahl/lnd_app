@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid'
 // core components
-import {convertBTC, convertNixTimestamp, convertDateToString} from '../utils/btcUtils'
+import {convertSatoshiToBTC, convertNixTimestamp, convertDateToString} from '../utils/btcUtils'
 import GridItem from "components/Grid/GridItem.jsx"
 import Table from 'components/Table/Table'
 import Card from "components/Card/Card.jsx";
@@ -18,10 +18,10 @@ import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
 const columnNames=['tx_hash', 'amount', 'confirmations', 'time', 'fees']
 const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amount, num_confirmations, time_stamp, total_fees})=>[
     tx_hash,
-    convertBTC(amount), 
+    convertSatoshiToBTC(amount), 
     num_confirmations,
     convertDateToString(convertNixTimestamp(time_stamp)),
-    convertBTC(total_fees)
+    convertSatoshiToBTC(total_fees)
 ]):[]
 export const Transactions=withStyles(styles)(({transactions, encryptedMacaroon, password, classes, getTransactions})=>(
 <ShowLockedMessage>

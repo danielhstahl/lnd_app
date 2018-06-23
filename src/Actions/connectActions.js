@@ -9,7 +9,8 @@ import {
     JUST_UPDATED,
     GET_INVOICES,
     PASSWORD_RESET,
-    PASSWORD_ERROR
+    PASSWORD_ERROR,
+    UPDATE_INVOICES
 } from './actionDefinitions'
 import crypto from 'crypto'
 import {delay} from '../utils/componentUtils'
@@ -171,8 +172,22 @@ const getInvoicesLocal=dispatch=>({macaroon})=>{
         .then(checkWhetherFound(dispatch, GET_INVOICES))
 }
 
+const createInvoiceLocal=dispatch=>({macaroon, value})=>{
+    const req=getLightningRequest({
+        macaroon, 
+        method:'POST', 
+        endpoint:formUrl('invoices'),
+        body:{
+            value
+        }
+    })
+    return fetch(req)
+        .then(checkWhetherFound(dispatch, UPDATE_INVOICES))
+}
+
 export const checkConnection=connectFactory(checkConnectionLocal)
 export const unlockWallet=connectFactory(unlockWalletLocal)
 export const getBalance=connectFactory(getBalanceLocal)
 export const getTransactions=connectFactory(getTransactionsLocal)
 export const getInvoices=connectFactory(getInvoicesLocal)
+export const createInvoice=connectFactory(createInvoiceLocal)

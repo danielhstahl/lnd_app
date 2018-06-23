@@ -17,8 +17,7 @@ import {
     NO_CONNECTION,
     NO_ATTEMPT
 } from '../Reducers/connectReducer'
-import {convertBTC} from '../utils/btcUtils'
-
+import {convertSatoshiToBTC} from 'utils/btcUtils'
 const variantIcon = {
     success: CheckCircleIcon,
     warning: WarningIcon,
@@ -91,8 +90,8 @@ const ChainStatsConnected=connect(
 
 const BalanceStats=({balance})=>balance.total_balance!==undefined?(
     <span>
-        Total: {convertBTC(balance.total_balance)} BTC<br/>
-        Confirmed: {convertBTC(balance.confirmed_balance)} BTC
+        Total: {convertSatoshiToBTC(balance.total_balance)} BTC<br/>
+        Confirmed: {convertSatoshiToBTC(balance.confirmed_balance)} BTC
     </span>
 ):null
 const mapStateToPropsBalance=({ network})=>({
