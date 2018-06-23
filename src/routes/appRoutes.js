@@ -1,17 +1,12 @@
-import Dashboard from "@material-ui/icons/Dashboard"
-import Settings from "@material-ui/icons/Settings"
 import Transactions from 'views/Transactions'
 import Payments from 'views/Payments'
+import SignIn from 'views/SignIn'
 import Invoices from 'views/Invoices'
 import ContentPaste from "@material-ui/icons/ContentPaste"
 import AttachMoney from "@material-ui/icons/AttachMoney"
 import LibraryBooks from "@material-ui/icons/LibraryBooks"
-import BubbleChart from "@material-ui/icons/BubbleChart"
-import LocationOn from "@material-ui/icons/LocationOn"
-import Notifications from "@material-ui/icons/Notifications"
-import Unarchive from "@material-ui/icons/Unarchive"
+import Settings from "@material-ui/icons/Settings"
 
-import SignIn from 'views/SignIn'
 export default [
     {
       path: "/transactions",

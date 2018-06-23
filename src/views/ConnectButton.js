@@ -2,7 +2,7 @@ import React from 'react'
 import Button from 'components/CustomButtons/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux' 
-import { checkConnection, unlockWallet, createInvoice } from 'Actions/connectActions'
+import { checkConnection, unlockWallet, createInvoice, sendPayment } from 'Actions/connectActions'
 import { setMacaroon} from 'Actions/signInActions'
 import {resetInvoice} from 'Actions/invoiceActions'
 import PropTypes from 'prop-types'
@@ -83,4 +83,18 @@ const mapStateToPropsCreateInvoice=({signin, connection, encryptedMacaroon, invo
 export const CreateInvoiceButton=connect(
     mapStateToPropsCreateInvoice,
     mapDispatchToPropsCreateInvoice
+)(LndButton)
+
+
+const mapStateToPropsSendPayment=({signin, connection, encryptedMacaroon, payment})=>({
+    isConnecting:connection.isConnecting,
+    paymentRequest:payment,
+    encryptedMacaroon
+})
+const mapDispatchToPropsSendPayment=dispatch=>({
+    handleConnect:sendPayment(dispatch)
+})
+export const SendPaymentButton=connect(
+    mapStateToPropsSendPayment,
+    mapDispatchToPropsSendPayment
 )(LndButton)

@@ -13,19 +13,17 @@ import CardBody from "components/Card/CardBody.jsx"
 import CardActions from '@material-ui/core/CardActions'
 import QrReader from 'react-qr-reader'
 import Button from 'components/CustomButtons/Button'
-import {sendPayment} from 'Actions/connectActions'
 import {updatePaymentRequest} from 'Actions/paymentActions'
+import {SendPaymentButton} from 'views/ConnectButton'
 import {
     toggleQRRaw
 } from 'Actions/qrActions'
 const formControlProps={fullWidth:true}
 const style={width:'100%'}
 export const Payments=withStyles(styles)(({
-    encryptedMacaroon, 
-    password, classes, 
-    paymentRequest,
-    showRaw,updatePaymentRequest,
-    toggleRaw, sendPayment
+    classes, paymentRequest,
+    showRaw, updatePaymentRequest,
+    toggleRaw
 })=>(
     <ShowLockedMessage>
         <Grid container>
@@ -55,13 +53,14 @@ export const Payments=withStyles(styles)(({
                         }
                     </CardBody>
                     <CardActions>
-                        <Button 
-                            color='primary' 
-                            onClick={sendPayment({encryptedMacaroon, password, paymentRequest})}
-                            disabled={!paymentRequest}
+                        <SendPaymentButton
+                            style={{
+                                disabled:!paymentRequest,
+                                color:'primary'
+                            }} 
                         >
                             Submit
-                        </Button>
+                        </SendPaymentButton>
                         <Button color='primary' onClick={toggleRaw}>{showRaw?'Scan QR':'Show Hash'}</Button>
                     </CardActions>
                 </Card>
@@ -70,15 +69,12 @@ export const Payments=withStyles(styles)(({
     </ShowLockedMessage>
 ))
 
-const mapStateToProps=({encryptedMacaroon, signin, qr, payment})=>({
-    password:signin.password,
-    encryptedMacaroon,
+const mapStateToProps=({qr, payment})=>({
     showRaw:qr.showRaw,
     paymentRequest:payment
 })
 
 const mapDispatchToProps=dispatch=>({
-    sendPayment:sendPayment(dispatch),
     updatePaymentRequest:updatePaymentRequest(dispatch),
     toggleRaw:toggleQRRaw(dispatch)
 })
