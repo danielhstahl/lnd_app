@@ -1,8 +1,10 @@
 import Dashboard from "@material-ui/icons/Dashboard"
-import Person from "@material-ui/icons/Person"
+import Settings from "@material-ui/icons/Settings"
 import Transactions from 'views/Transactions'
 import Payments from 'views/Payments'
+import Invoices from 'views/Invoices'
 import ContentPaste from "@material-ui/icons/ContentPaste"
+import AttachMoney from "@material-ui/icons/AttachMoney"
 import LibraryBooks from "@material-ui/icons/LibraryBooks"
 import BubbleChart from "@material-ui/icons/BubbleChart"
 import LocationOn from "@material-ui/icons/LocationOn"
@@ -13,7 +15,7 @@ import SignIn from 'views/SignIn'
 export default [
     {
       path: "/transactions",
-      sidebarName: "View Transactions",
+      sidebarName: "Transactions",
       navbarName: "View Transactions",
       icon: ContentPaste,
       component: Transactions
@@ -21,15 +23,22 @@ export default [
     {
       path: "/payments",
       sidebarName: "Payments",
-      navbarName: "Payments",
-      icon: ContentPaste,
+      navbarName: "Make Payment",
+      icon: AttachMoney,
       component: Payments 
+    },
+    {
+      path: "/invoices",
+      sidebarName: "Invoices",
+      navbarName: "Make and View Invoices",
+      icon: LibraryBooks,
+      component: Invoices 
     },
     {
       path: "/settings",
       sidebarName: "Lightning Settings",
       navbarName: "Settings",
-      icon: Person,
+      icon: Settings,
       component: SignIn
     },
     { redirect: true, path: "/", to: "/settings", navbarName: "Redirect" }

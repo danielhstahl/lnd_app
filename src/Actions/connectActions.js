@@ -183,6 +183,16 @@ const createInvoiceLocal=dispatch=>({macaroon, amount, memo})=>{
     return fetch(req)
         .then(()=>getInvoicesLocal(dispatch)({macaroon}))
 }
+const sendPaymentLocal=dispatch=>({macaroon, paymentRequest})=>{
+    const req=getLightningRequest({
+        macaroon, 
+        method:'POST', 
+        endpoint:formUrl('channels', 'transactions'),
+        body:JSON.stringify({payment_request:paymentRequest})
+    })
+    return fetch(req)
+        .then(()=>getInvoicesLocal(dispatch)({macaroon}))
+}
 
 export const checkConnection=connectFactory(checkConnectionLocal)
 export const unlockWallet=connectFactory(unlockWalletLocal)
@@ -190,3 +200,4 @@ export const getBalance=connectFactory(getBalanceLocal)
 export const getTransactions=connectFactory(getTransactionsLocal)
 export const getInvoices=connectFactory(getInvoicesLocal)
 export const createInvoice=connectFactory(createInvoiceLocal)
+export const sendPayment=connectFactory(sendPaymentLocal)

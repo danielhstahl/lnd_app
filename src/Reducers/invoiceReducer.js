@@ -17,8 +17,3 @@ export default (state={}, action)=>{
             return state
     }
 }
-/*
-export default combineReducers({
-    paymentRequest,
-    amount
-})*/

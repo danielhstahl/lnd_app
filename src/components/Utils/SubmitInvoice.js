@@ -13,7 +13,7 @@ export const SubmitInvoice=({amount, memo, updateInvoice})=>[
         }}
         key='invoiceamt'
 
-        labelText='Enter Invoice Amount'
+        labelText='Invoice Amount'
         formControlProps={formControlProps}
     />,
     <CustomInput
@@ -22,11 +22,14 @@ export const SubmitInvoice=({amount, memo, updateInvoice})=>[
             onChange:updateInvoice('memo')
         }}
         key='memo'
-        labelText='Enter Memo'
+        labelText='Optional Memo'
         formControlProps={formControlProps}
     />,
     <CreateInvoiceButton 
-        styles={styles} 
+        styles={{
+            disabled:!amount,
+            ...styles
+        }}
         key='submitinv'
     >
         Create Invoice

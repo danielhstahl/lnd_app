@@ -1,74 +1,81 @@
 import React from 'react'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
+import {styles} from 'assets/jss/material-dashboard-react/views/table'
+import SubmitInvoice from 'components/Utils/SubmitInvoice'
 import { withStyles } from '@material-ui/core/styles'
-import Grid from "@material-ui/core/Grid"
-// core components
-import {convertSatoshiToBTC, convertNixTimestamp, convertDateToString} from '../utils/btcUtils'
+import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
+import {getInvoices} from 'Actions/connectActions'
+import Button from 'components/CustomButtons/Button'
 import GridItem from 'components/Grid/GridItem.jsx'
 import Table from 'components/Table/Table'
+import AsyncHOC from "components/Utils/AsyncHOC"
+import QRView from 'components/Utils/QRView'
+import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
 import Card from "components/Card/Card.jsx"
 import CardHeader from "components/Card/CardHeader.jsx"
 import CardBody from "components/Card/CardBody.jsx"
-import AsyncHOC from "components/Utils/AsyncHOC"
-import {getInvoices} from 'Actions/connectActions'
-import {styles} from 'assets/jss/material-dashboard-react/views/table'
-import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
-
-
+import {toggleQRShow} from 'Actions/qrActions'
+import {setCurrentPaymentRequest} from 'Actions/invoiceActions'
+import { convertSatoshiToBTC, convertDateToString, convertNixTimestamp } from '../utils/btcUtils'
 const columnNames=['memo', 'request', 'amount', 'created date']
-const parseData=({invoices})=>invoices?invoices.map(({memo, payment_request, value, creation_date, })=>[
+const parseData=({invoices}, showQR)=>invoices?invoices.map(({memo, payment_request, value, creation_date})=>[
     memo,
-    payment_request, 
+    <Button onClick={showQR(payment_request)}>View request</Button>, 
     convertSatoshiToBTC(value),
     convertDateToString(convertNixTimestamp(creation_date))
 ]):[]
-export const Invoices=withStyles(styles)(({invoices, encryptedMacaroon, password, classes, getInvoices})=>(
-<ShowLockedMessage>
-    <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
-        <Grid container>
-        <GridItem xs={12} sm={12} md={12}>
-            <Card>
-            <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Invoices</h4>
-                <p className={classes.cardCategoryWhite}>
-                Invoices for this account
-                </p>
-            </CardHeader>
-            <CardBody>
-                <Table
-                tableHeaderColor="primary"
-                tableHead={columnNames}
-                tableData={parseData(invoices)}
-                />
-            </CardBody>
-            </Card>
-        </GridItem>
-        </Grid>
-    </AsyncHOC>
-</ShowLockedMessage>
+const marginTop={marginTop:16}
+export const PendingInvoices=withStyles(styles)(({
+    invoices, encryptedMacaroon, 
+    password, classes, 
+    getInvoices, showQR,
+    paymentRequest
+})=>(
+    <ShowLockedMessage>
+        <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
+            <Grid container>
+            <QRView qrRaw={paymentRequest}/>
+            <GridItem xs={12} sm={12} md={8}>
+                <Card>
+                <CardHeader color="primary">
+                    <h4 className={classes.cardTitleWhite}>Invoices</h4>
+                    <p className={classes.cardCategoryWhite}>
+                    Invoices for this account
+                    </p>
+                </CardHeader>
+                <CardBody>
+                    <SubmitInvoice/>
+                    <Divider style={marginTop}/>
+                    <Table
+                        tableHeaderColor="primary"
+                        tableHead={columnNames}
+                        tableData={parseData(invoices, showQR)}
+                    />
+                </CardBody>
+                </Card>
+            </GridItem>
+            </Grid>
+        </AsyncHOC>
+    </ShowLockedMessage>
 ))
-Invoices.propTypes={
-    encryptedMacaroon:PropTypes.string,
-    password:PropTypes.string,
-    classes:PropTypes.shape({
-        cardTitleWhite:PropTypes.string.isRequired,
-        cardCategoryWhite:PropTypes.string.isRequired
-    }).isRequired,
-    getInvoices:PropTypes.func.isRequired
-}
 
-const mapStateToProps=({signin, network, encryptedMacaroon})=>({
+const mapStateToProps=({paymentRequest, network, encryptedMacaroon, signin})=>({
     password:signin.password,
     encryptedMacaroon,
-    invoices:network.invoices
+    invoices:network.invoices,
+    paymentRequest
 })
-
+const showQR=dispatch=>paymentRequest=>()=>{
+    toggleQRShow(dispatch)()
+    setCurrentPaymentRequest(dispatch)(paymentRequest)
+}
 const mapDispatchToProps=dispatch=>({
+    showQR:showQR(dispatch),
     getInvoices:getInvoices(dispatch)
 })
-
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Invoices)
+)(PendingInvoices)
