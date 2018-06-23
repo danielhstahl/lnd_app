@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
-import Button from "components/CustomButtons/Button"
-import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from "@material-ui/core/Grid";
 // core components

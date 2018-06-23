@@ -16,7 +16,7 @@ const styles={
 
 export default withStyles(styles)(({classes})=>(
 <Grid container>
-    <GridItem xs={12} sm={12} md={4}>
+    <GridItem xs={12} sm={12} md={8}>
         <Card profile>
             <CardBody profile>
             <p className={classes.description}>

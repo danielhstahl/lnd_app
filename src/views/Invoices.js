@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
-import Button from "components/CustomButtons/Button"
-import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from "@material-ui/core/Grid"
 // core components
@@ -14,18 +12,16 @@ import CardHeader from "components/Card/CardHeader.jsx"
 import CardBody from "components/Card/CardBody.jsx"
 import AsyncHOC from "components/Utils/AsyncHOC"
 import {getInvoices} from '../Actions/connectActions'
-import {CONNECTION_UNLOCKED} from '../Reducers/connectReducer'
 import {styles} from 'assets/jss/material-dashboard-react/views/table'
 import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
 
 
-const columnNames=['tx_hash', 'amount', 'confirmations', 'time', 'fees']
-const parseData=({invoices})=>invoices?invoices.map(({tx_hash, amount, num_confirmations, time_stamp, total_fees})=>[
-    tx_hash,
-    convertBTC(amount), 
-    num_confirmations,
-    (new Date(convertNixTimestamp(time_stamp))).toLocaleDateString("en-US"),
-    convertBTC(total_fees)
+const columnNames=['memo', 'request', 'amount', 'created date']
+const parseData=({invoices})=>invoices?invoices.map(({memo, payment_request, value, creation_date, })=>[
+    memo,
+    payment_request, 
+    convertBTC(value),
+    (new Date(convertNixTimestamp(creation_date))).toLocaleDateString("en-US")
 ]):[]
 export const Invoices=withStyles(styles)(({invoices, encryptedMacaroon, password, classes, getInvoices})=>(
 <ShowLockedMessage>
@@ -34,9 +30,9 @@ export const Invoices=withStyles(styles)(({invoices, encryptedMacaroon, password
         <GridItem xs={12} sm={12} md={12}>
             <Card>
             <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Transactions</h4>
+                <h4 className={classes.cardTitleWhite}>Invoices</h4>
                 <p className={classes.cardCategoryWhite}>
-                All transactions for this account
+                Invoices for this account
                 </p>
             </CardHeader>
             <CardBody>
