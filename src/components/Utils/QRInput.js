@@ -7,11 +7,19 @@ import {updateSignIn} from 'Actions/signInActions'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
 import {toggleQRRaw} from 'Actions/qrActions'
 import Button from 'components/CustomButtons/Button'
-const style={width:'60%', margin: 'auto'}
+import { withStyles } from '@material-ui/core/styles'
+const style=theme=>({
+    qr:{
+        [theme.breakpoints.up("md")]:{
+            width:'60%'
+        },    
+        margin: 'auto'
+    }
+})
 const formControlProps={fullWidth:true}
-export const QRInput=({
+export const QRInput=withStyles(style)(({
     showRaw, labelText,
-    value, onChange
+    value, onChange, classes
 })=>showRaw?
     <CustomInput 
         labelText={labelText}
@@ -23,15 +31,18 @@ export const QRInput=({
         formControlProps={formControlProps}
     />:
     <QrReader 
-        style={style} 
+        className={classes.qr} 
         onError={err=>console.log(err)}
         onScan={onChange}
+        showViewFinder={false}
     />
+)
 
 QRInput.propTypes={
     showRaw:PropTypes.bool.isRequired,
     value:PropTypes.string,
-    RawInput:PropTypes.node.isRequired
+    labelText:PropTypes.string,
+    onChange:PropTypes.func.isRequired
 }
 
 const mapStateToPropsPaymentRequest=({qr, payment})=>({

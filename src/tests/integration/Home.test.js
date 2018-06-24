@@ -1,7 +1,8 @@
 import React from 'react'
 import 'index.css'
 import { 
-    SET_ENCRYPTED_MACAROON
+    SET_ENCRYPTED_MACAROON,
+    TOGGLE_SHOW_RAW
 } from 'Actions/actionDefinitions'
 import Home from 'views/Home'
 import { Provider } from 'react-redux'
@@ -21,6 +22,8 @@ import {
     Route
 } from 'react-router-dom'
 import {delay} from 'utils/componentUtils'
+import { ToggleQRButton } from '../../components/Utils/QRInput'
+
 let store
 const textContent = node => {
     try {
@@ -33,6 +36,9 @@ const textContent = node => {
 beforeEach(() => {
     fetch.resetMocks()
     store = createStore(reducer)
+    store.dispatch({
+        type:TOGGLE_SHOW_RAW
+    })
 })
 describe('render', ()=>{
     it('renders without error', ()=>{
@@ -166,6 +172,10 @@ describe('integrations', ()=>{
         )
         app.update()       
         
+        const toggleQR=app.find(ToggleQRButton)
+        expect(toggleQR.text()).toEqual('Scan QR')
+
+
         /**Simulate input to macaroon */
         const macaroonsInput=app.findWhere(val=>textContent(val)==='Macaroon').find(Input)
         expect(macaroonsInput.length).toEqual(1)
@@ -200,6 +210,10 @@ describe('integrations', ()=>{
             </Provider>
         )
         app.update()       
+
+        const toggleQR=app.find(ToggleQRButton)
+        expect(toggleQR.text()).toEqual('Scan QR')
+
         //console.log(app.html())
         /**Simulate input to macaroon */
         const macaroonsInput=app.findWhere(val=>textContent(val)==='Macaroon').find(Input)

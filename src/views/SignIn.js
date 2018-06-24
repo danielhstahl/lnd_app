@@ -1,5 +1,5 @@
 import React from 'react'
-import {QRInputPaymentRequest, ToggleQRButton} from 'components/Utils/QRInput'
+import {QRInputMacaroon, ToggleQRButton} from 'components/Utils/QRInput'
 import Card from 'components/Card/Card'
 import CardHeader from 'components/Card/CardHeader'
 import CardActions from '@material-ui/core/CardActions'
@@ -58,7 +58,7 @@ const SignIn=withStyles(styles)(({
                         <Button onClick={removeMacaroon}>
                             Remove existing encrypted macaroon
                         </Button>:
-                        <QRInputPaymentRequest labelText="Macaroon" />
+                        <QRInputMacaroon labelText="Macaroon" />
                         }
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12}>
