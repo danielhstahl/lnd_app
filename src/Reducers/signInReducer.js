@@ -30,7 +30,6 @@ export const passwordReducer=(state=false, action)=>{
 export default (state={}, action)=>{
     switch(action.type){
         case ENTER_SIGN_IN:
-            console.log(state)
             return {...state, [action.key]:action.value}
         default:
             return state
