@@ -1,57 +1,46 @@
-const fs = require('fs-extra')
-const child_process=require('child_process')
-const {promisify}=require('util')
-const grpc = require('grpc')
-const {homedir}=require('os')
+const express=require('express')
+//const expressStaticGzip = require("express-static-gzip")
 const path=require('path')
-const express = require('express')
-const {endpoints}=require('./setupEndpoints')
-const exec=promisify(child_process.exec)
+const app=express()
+const https=require('https')
+const lightning_host=process.env.HOST_NAME||'localhost'
+const lightning_port=process.env.HOST_PORT||8080
+const port=process.env.PORT||8081
 const bodyParser = require('body-parser')
-var cors = require('cors')
-const app = express()
-const expressWs = require('express-ws')(app)
-
 app.use(bodyParser.json())
-app.use(cors())
+//app.use('/', expressStaticGzip(path.join(__dirname, 'static')))
+app.use(express.static(path.join(__dirname)))
+const sendItemToServer=(req, res)=>{
+    const headerKey='grpc-metadata-macaroon'
+    const getHeader=req.headers[headerKey]
+    const options={
+        path:req.path,
+        hostname:lightning_host,
+        port:lightning_port,
+        headers:{[headerKey]:getHeader},
+        body:req.body,
+        method:req.method,
+        rejectUnauthorized: false,
+    }
+    let result=''
+    const serverRequest=https.request(options, serverResult=>{
+        serverResult.on('data', d => {
+            result+=d
+        })
+        serverResult.on('end', ()=>{
+            res.send(result)
+        })
+    })
+    serverRequest.on('error', err=>{
+        console.log(err)
+    })
+    serverRequest.end()
+}
+app.all('/v1/*', sendItemToServer)
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server started`);
+app.set('port', port)
+
+app.listen(app.get('port'), () => {
+    console.log('Node app is running on port', app.get('port'))
+    console.log('Proxying to', hostname, ':', port)
 })
-
-process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
-
-const pathToLnd=process.env.NODE_ENV==='production'?path.resolve(homedir(), '.lnd'):__dirname
-
-
-const pathOnNetwork=process.env.NODE_ENV==='production'?'localhost':process.env.IP
-Promise.all([
-    fs.realpath(path.resolve(pathToLnd, 'admin.macaroon'))
-        .then(path=>fs.readFile(path))
-        .then(m=>m.toString('hex'))
-        .then(macaroon=>{
-            const metadata=new grpc.Metadata()
-            metadata.add('macaroon', macaroon)
-            return grpc.credentials.createFromMetadataGenerator((_args, callback) =>{
-                callback(null, metadata)
-            })
-        }),
-    fs.realpath(path.resolve(pathToLnd, 'tls.cert'))
-        .then(path=>fs.readFile(path))
-        .then(grpc.credentials.createSsl),
-    exec(`wget https://raw.githubusercontent.com/lightningnetwork/lnd/master/lnrpc/rpc.proto`)
-        .then(_=>fs.readFile('./rpc.proto', 'utf8'))
-        .then(d=>d.split('import "google/api/annotations.proto";').join(''))
-        .then(d=>fs.writeFile('./rpc.proto', d))
-]).then(([macaroonCreds, sslCreds, _])=>{
-    return grpc.credentials.combineChannelCredentials(sslCreds, macaroonCreds)
-}).then(credentials=>{
-    const {lnrpc} = grpc.load('rpc.proto')
-    const client = new lnrpc.Lightning(`${pathOnNetwork}:10009`, credentials)
-    endpoints(client, app)
-    return fs.remove('./rpc.proto')
-}).catch(err=>{
-    console.log(err)
-    fs.remove('./rpc.proto')
-})
-
