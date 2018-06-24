@@ -6,24 +6,16 @@ import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import GridItem from 'components/Grid/GridItem.jsx'
 import ShowLockedMessage from '../components/Utils/ShowLockedMessage'
-import CustomInput from 'components/CustomInput/CustomInput.jsx'
 import Card from "components/Card/Card.jsx"
 import CardHeader from "components/Card/CardHeader.jsx"
 import CardBody from "components/Card/CardBody.jsx"
 import CardActions from '@material-ui/core/CardActions'
-import QrReader from 'react-qr-reader'
-import Button from 'components/CustomButtons/Button'
 import {updatePaymentRequest} from 'Actions/paymentActions'
 import {SendPaymentButton} from 'views/ConnectButton'
-import {
-    toggleQRRaw
-} from 'Actions/qrActions'
-const formControlProps={fullWidth:true}
-const style={width:'60%', margin: 'auto'}
+import {QRInputPaymentRequest, ToggleQRButton} from 'components/Utils/QRInput'
+
 export const Payments=withStyles(styles)(({
-    classes, paymentRequest,
-    showRaw, updatePaymentRequest,
-    toggleRaw
+    classes, paymentRequest
 })=>(
     <ShowLockedMessage>
         <Grid container>
@@ -36,21 +28,7 @@ export const Payments=withStyles(styles)(({
                         </p>
                     </CardHeader>
                     <CardBody profile>
-                    {showRaw?<CustomInput 
-                        labelText="Payment Request" 
-                        inputProps={{
-                            value:paymentRequest, 
-                            multiline:true,
-                            onChange:updatePaymentRequest
-                        }}
-                        formControlProps={formControlProps}
-                        />:
-                        <QrReader 
-                            style={style} 
-                            onError={err=>console.log(err)}
-                            onScan={updatePaymentRequest}
-                        />
-                        }
+                        <QRInputPaymentRequest labelText="Payment Request" />
                     </CardBody>
                     <CardActions>
                         <SendPaymentButton
@@ -61,7 +39,7 @@ export const Payments=withStyles(styles)(({
                         >
                             Submit
                         </SendPaymentButton>
-                        <Button color='primary' onClick={toggleRaw}>{showRaw?'Scan QR':'Show Hash'}</Button>
+                        <ToggleQRButton/>
                     </CardActions>
                 </Card>
             </GridItem>
@@ -71,18 +49,14 @@ export const Payments=withStyles(styles)(({
 Payments.propTypes={
     classes:PropTypes.object.isRequired,
     paymentRequest:PropTypes.string.isRequired,
-    showRaw:PropTypes.bool.isRequired,
     updatePaymentRequest:PropTypes.func.isRequired,
-    toggleRaw:PropTypes.func.isRequired
 }
-const mapStateToProps=({qr, payment})=>({
-    showRaw:qr.showRaw,
+const mapStateToProps=({payment})=>({
     paymentRequest:payment
 })
 
 const mapDispatchToProps=dispatch=>({
     updatePaymentRequest:updatePaymentRequest(dispatch),
-    toggleRaw:toggleQRRaw(dispatch)
 })
 export default connect(
     mapStateToProps,

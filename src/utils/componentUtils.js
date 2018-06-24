@@ -20,3 +20,15 @@ export const filterMessageVariant=message=>{
 export const delay=ms=>new Promise((resolve, _)=>{
     setTimeout(()=>resolve(), ms)
 })
+
+export const eventOrValue=eOrV=>{
+    if(eOrV===null||eOrV===undefined){
+        return eOrV
+    }
+    if(eOrV.target){
+        return eOrV.target.value
+    }
+    else{
+        return eOrV
+    }
+}

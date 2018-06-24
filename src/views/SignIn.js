@@ -1,8 +1,8 @@
 import React from 'react'
-
+import {QRInputPaymentRequest, ToggleQRButton} from 'components/Utils/QRInput'
 import Card from 'components/Card/Card'
 import CardHeader from 'components/Card/CardHeader'
-import CardFooter from 'components/Card/CardFooter'
+import CardActions from '@material-ui/core/CardActions'
 import CardBody from 'components/Card/CardBody'
 import GridItem from 'components/Grid/GridItem'
 import CustomInput from "components/CustomInput/CustomInput.jsx"
@@ -35,6 +35,7 @@ const styles = {
     }
 }
 const formControlProps={fullWidth:true}
+
 const getWhetherMacaroonExists=(macaroon, encryptedMacaroon)=>(macaroon||encryptedMacaroon)?true:false
 const style={color:"primary"}
 const SignIn=withStyles(styles)(({
@@ -57,16 +58,8 @@ const SignIn=withStyles(styles)(({
                         <Button onClick={removeMacaroon}>
                             Remove existing encrypted macaroon
                         </Button>:
-                        <CustomInput
-                            labelText="Macaroon"
-                            id="macaroon"
-                            formControlProps={formControlProps}
-                            inputProps={{
-                                value:macaroon,
-                                onChange:updateSignIn('macaroon'),
-                                multiline:true
-                            }}
-                        />}
+                        <QRInputPaymentRequest labelText="Macaroon" />
+                        }
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12}>
                         <CustomInput
@@ -83,7 +76,7 @@ const SignIn=withStyles(styles)(({
                     </GridItem>
                     </Grid>
                 </CardBody>
-                <CardFooter>
+                <CardActions>
                     <ConnectButton 
                         styles={{disabled:notAllItemsExist({
                             macaroon:getWhetherMacaroonExists(macaroon, encryptedMacaroon), password
@@ -91,7 +84,8 @@ const SignIn=withStyles(styles)(({
                     >
                         {encryptedMacaroon?'Connect':'Save and Connect'}
                     </ConnectButton>
-                </CardFooter>
+                    <ToggleQRButton styles={{disabled:encryptedMacaroon}}/>
+                </CardActions>
                 <UnlockWallet />
             </Card>
         </GridItem>

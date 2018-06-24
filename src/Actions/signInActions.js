@@ -3,11 +3,12 @@ import {
     REMOVE_MACAROON,
     SET_ENCRYPTED_MACAROON
 } from '../Actions/actionDefinitions'
+import {eventOrValue} from 'utils/componentUtils'
 import crypto from 'crypto'
 export const updateSignIn=dispatch=>key=>e=>dispatch({
     type:ENTER_SIGN_IN,
     key,
-    value:e.target.value
+    value:eventOrValue(e)
 })
 
 export const removeMacaroon=dispatch=>()=>{
