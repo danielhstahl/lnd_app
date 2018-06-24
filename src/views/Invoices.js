@@ -60,6 +60,22 @@ export const PendingInvoices=withStyles(styles)(({
         </AsyncHOC>
     </ShowLockedMessage>
 ))
+PendingInvoices.propTypes={
+    invoices:PropTypes.shape({
+        invoices:PropTypes.arrayOf(PropTypes.shape({
+            memo:PropTypes.string,
+            payment_request:PropTypes.string.isRequired,
+            value:PropTypes.string.isRequired,
+            creation_date:PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        }))
+    }).isRequired,
+    encryptedMacaroon:PropTypes.string,
+    password:PropTypes.string,
+    classes:PropTypes.object.isRequired,
+    getInvoices:PropTypes.func.isRequired,
+    showQR:PropTypes.func.isRequired,
+    paymentRequest:PropTypes.string
+}
 
 const mapStateToProps=({paymentRequest, network, encryptedMacaroon, signin})=>({
     password:signin.password,

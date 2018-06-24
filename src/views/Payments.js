@@ -68,7 +68,13 @@ export const Payments=withStyles(styles)(({
         </Grid>
     </ShowLockedMessage>
 ))
-
+Payments.propTypes={
+    classes:PropTypes.object.isRequired,
+    paymentRequest:PropTypes.string.isRequired,
+    showRaw:PropTypes.bool.isRequired,
+    updatePaymentRequest:PropTypes.func.isRequired,
+    toggleRaw:PropTypes.func.isRequired
+}
 const mapStateToProps=({qr, payment})=>({
     showRaw:qr.showRaw,
     paymentRequest:payment
