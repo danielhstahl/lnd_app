@@ -1,21 +1,22 @@
 const express=require('express')
-const expressStaticGzip = require("express-static-gzip")
+//const expressStaticGzip = require("express-static-gzip")
 const path=require('path')
 const app=express()
 const https=require('https')
-const hostname=process.env.HOST_NAME
-const port=process.env.HOST_PORT
+const lightning_host=process.env.HOST_NAME||'localhost'
+const lightning_port=process.env.HOST_PORT||8080
+const port=process.env.PORT||8081
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
-app.use('/', expressStaticGzip(path.join(__dirname, 'static')))
+//app.use('/', expressStaticGzip(path.join(__dirname, 'static')))
 app.use(express.static(path.join(__dirname)))
 const sendItemToServer=(req, res)=>{
     const headerKey='grpc-metadata-macaroon'
     const getHeader=req.headers[headerKey]
     const options={
         path:req.path,
-        hostname,
-        port,
+        hostname:lightning_host,
+        port:lightning_port,
         headers:{[headerKey]:getHeader},
         body:req.body,
         method:req.method,
@@ -34,13 +35,12 @@ const sendItemToServer=(req, res)=>{
         console.log(err)
     })
     serverRequest.end()
-    
-
 }
 app.all('/v1/*', sendItemToServer)
 
-app.set('port', (5000))
+app.set('port', port)
 
 app.listen(app.get('port'), () => {
     console.log('Node app is running on port', app.get('port'))
+    console.log('Proxying to', hostname, ':', port)
 })
