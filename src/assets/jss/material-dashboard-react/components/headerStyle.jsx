@@ -28,7 +28,7 @@ const headerStyle = theme => ({
     display: "block"
   },
   container: {
-    ...container,
+    ...container(theme),
     minHeight: "50px"
   },
   flex: {

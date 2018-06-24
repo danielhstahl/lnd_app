@@ -4,7 +4,7 @@ import {
   primaryColor
 } from "assets/jss/material-dashboard-react.jsx";
 
-const footerStyle = {
+const footerStyle =theme=>({
   block: {
     color: "inherit",
     padding: "15px",
@@ -33,7 +33,7 @@ const footerStyle = {
     padding: "15px 0",
     ...defaultFont
   },
-  container,
+  container:container(theme),
   a: {
     color: primaryColor,
     textDecoration: "none",
@@ -49,5 +49,5 @@ const footerStyle = {
     paddingTop: "0px",
     width: "auto"
   }
-};
+});
 export default footerStyle;
