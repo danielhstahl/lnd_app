@@ -17,6 +17,7 @@ script:
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - export SSHPASS=$DEPLOY_PASS
+- sshpass -e ssh -p 2222 $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; rm -r *;"
 - sshpass -e scp -P 2222 -r ./build/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH 
 - sshpass -e ssh -p 2222 $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; npm install; nohup npm start > /dev/null 2>&1 &"
 env:
