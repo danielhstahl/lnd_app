@@ -26,3 +26,4 @@ yarn-error.log*
 *.macaroon
 macaroon.txt
 nowCommands.txt
+customDeploy.sh

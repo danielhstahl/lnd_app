@@ -41,6 +41,6 @@ app.all('/v1/*', sendItemToServer)
 app.set('port', port)
 
 app.listen(app.get('port'), () => {
-    console.log('Node app is running on port', app.get('port'))
-    console.log('Proxying to', hostname, ':', port)
+    console.log('Node app is running on port', port)
+    console.log('Proxying to', lightning_host, ':', lightning_port)
 })
