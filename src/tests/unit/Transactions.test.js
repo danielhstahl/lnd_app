@@ -13,15 +13,15 @@ describe('render', ()=>{
         cardTitleWhite:'hello',
         cardCategoryWhite:'hello'
     }
-    const data=[
+    const data={transactions:[
         {
             tx_hash:'hello',
-            amount:'hello',
+            amount:'500',
             num_confirmations:'hello',
             time_stamp:'hello',
-            total_fees:'hello'
+            total_fees:'20'
         }
-    ]
+    ]}
     it('renders without error with no connection', ()=>{
         mount(<Provider store={store}><MemoryRouter><Transactions 
             getTransactions={getTransactions}

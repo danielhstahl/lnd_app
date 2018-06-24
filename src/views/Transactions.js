@@ -52,10 +52,10 @@ Transactions.propTypes={
     transactions:PropTypes.shape({
         transactions:PropTypes.arrayOf(PropTypes.shape({
             tx_hash:PropTypes.string.isRequired,
-            amount:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
-            num_confirmations:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
-            time_stamp:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired,
-            total_fees:PropTypes.oneOf([PropTypes.number, PropTypes.string]).isRequired
+            amount:PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+            num_confirmations:PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+            time_stamp:PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+            total_fees:PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired
         }))
     }),
     encryptedMacaroon:PropTypes.string,

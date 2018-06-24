@@ -36,26 +36,26 @@ export const PendingInvoices=withStyles(styles)(({
     <ShowLockedMessage>
         <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
             <Grid container>
-            <QRView qrRaw={paymentRequest}/>
-            <GridItem xs={12} sm={12} md={8}>
-                <Card>
-                <CardHeader color="primary">
-                    <h4 className={classes.cardTitleWhite}>Invoices</h4>
-                    <p className={classes.cardCategoryWhite}>
-                    Invoices for this account
-                    </p>
-                </CardHeader>
-                <CardBody>
-                    <SubmitInvoice/>
-                    <Divider style={marginTop}/>
-                    <Table
-                        tableHeaderColor="primary"
-                        tableHead={columnNames}
-                        tableData={parseData(invoices, showQR)}
-                    />
-                </CardBody>
-                </Card>
-            </GridItem>
+                <QRView qrRaw={paymentRequest}/>
+                <GridItem xs={12} sm={12} md={8}>
+                    <Card>
+                    <CardHeader color="primary">
+                        <h4 className={classes.cardTitleWhite}>Invoices</h4>
+                        <p className={classes.cardCategoryWhite}>
+                        Invoices for this account
+                        </p>
+                    </CardHeader>
+                    <CardBody>
+                        <SubmitInvoice/>
+                        <Divider style={marginTop}/>
+                        <Table
+                            tableHeaderColor="primary"
+                            tableHead={columnNames}
+                            tableData={parseData(invoices, showQR)}
+                        />
+                    </CardBody>
+                    </Card>
+                </GridItem>
             </Grid>
         </AsyncHOC>
     </ShowLockedMessage>

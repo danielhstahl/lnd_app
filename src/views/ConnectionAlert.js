@@ -25,7 +25,7 @@ const variantIcon = {
 const filterMessageText=message=>{
     switch(message){
         case CONNECTION_BUT_LOCKED:
-            return 'Successful connection, but wallet is locked' 
+            return 'Successful connection, but wallet is locked.' 
         case CONNECTION_UNLOCKED:
             return 'Successful connection!' 
         case NO_CONNECTION:

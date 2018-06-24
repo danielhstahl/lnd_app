@@ -35,7 +35,7 @@ const getMacaroon=({password, encryptedMacaroon})=>{
 const notifyTime=4000
 const dispatchError=dispatch=>err=>{
     console.log(err)
-    dispatch({
+    return dispatch({
         type:CONNECT_FAILED
     })
 }
