@@ -1,4 +1,5 @@
 const express=require('express')
+const expressStaticGzip = require("express-static-gzip")
 const path=require('path')
 const app=express()
 const https=require('https')
@@ -6,6 +7,7 @@ const hostname=process.env.HOST_NAME
 const port=process.env.HOST_PORT
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
+app.use('/', expressStaticGzip(path.join(__dirname, 'static')))
 app.use(express.static(path.join(__dirname)))
 const sendItemToServer=(req, res)=>{
     const headerKey='grpc-metadata-macaroon'

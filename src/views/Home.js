@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 import ConnectionAlert from './ConnectionAlert'
 import ConnectionInfo from './ConnectionInfo'
-import image from "assets/img/lightning_australia.jpg";
+import image from "assets/img/lightning_australia_small.jpg";
 import logo from "assets/img/reactlogo.png"
 import appRoutes from 'routes/appRoutes'
 import {toggleDrawer} from '../Actions/homeActions'
