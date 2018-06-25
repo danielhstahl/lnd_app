@@ -1,4 +1,4 @@
-import {eventOrValue} from 'Actions/paymentActions'
+import {eventOrValue} from 'utils/componentUtils'
 
 describe('eventOrValue', ()=>{
     it('returns value when event', ()=>{

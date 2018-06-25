@@ -17,13 +17,13 @@ describe('setMacaroon', ()=>{
         }
         setMacaroon(dispatch)({macaroon, password})()
     })
-    it('returns blank if macaroon does not exist', ()=>{
+    it('returns undefined if macaroon does not exist', ()=>{
         const password='hello'
         const macaroon=''
         const dispatch=({value})=>{
             
         }
-        expect(setMacaroon(dispatch)({macaroon, password})()).toEqual({})
+        expect(setMacaroon(dispatch)({macaroon, password})()).toEqual(undefined)
         
     })
 })

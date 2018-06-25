@@ -1,13 +1,11 @@
 const express=require('express')
 const fs=require('fs')
-//const expressStaticGzip = require("express-static-gzip")
 const path=require('path')
 const app=express()
 const https=require('https')
 
 const key = fs.readFileSync('/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/privkey.pem')
 var cert = fs.readFileSync( '/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/fullchain.pem')
-
 
 const options={
     key,
@@ -19,8 +17,7 @@ const lightning_host=process.env.HOST_NAME||'localhost'
 const lightning_port=process.env.HOST_PORT||8080
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
-//app.use('/', expressStaticGzip(path.join(__dirname, 'static')))
-app.use(express.static(path.join(__dirname)))
+//app.use(express.static(path.join(__dirname)))
 const sendItemToServer=(req, res)=>{
     const headerKey='grpc-metadata-macaroon'
     const getHeader=req.headers[headerKey]
