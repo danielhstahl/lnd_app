@@ -20,7 +20,7 @@ The source code is available in this repository.  The app has no server.  It is 
 
 ## Screenshots
 
-![image](https://github.com/phillyfan1138/lnd_app/raw/internalSite/screenshots/Screenshot-2018-6-17%20React%20App.png)
+![image](https://github.com/phillyfan1138/lnd_app/raw/master/screenshots/Screenshot-2018-6-17%20React%20App.png)
 
 ## Acknowledgments
 
