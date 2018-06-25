@@ -3,7 +3,7 @@ import Button from 'components/CustomButtons/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux' 
 import { checkConnection, unlockWallet, createInvoice, sendPayment } from 'Actions/connectActions'
-import { setMacaroon} from 'Actions/signInActions'
+import { setMacaroon, setHostname} from 'Actions/signInActions'
 import {resetInvoice} from 'Actions/invoiceActions'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
@@ -35,20 +35,22 @@ LndButton.propTypes={
     children:PropTypes.node.isRequired //
 }
 
-const mapStateToProps=({signin, connection, encryptedMacaroon})=>({
+const mapStateToProps=({signin, connection, encryptedMacaroon, savedHostname})=>({
     isConnecting:connection.isConnecting,
     ...signin,
-    encryptedMacaroon
+    encryptedMacaroon, savedHostname
 })
 
 const createConnectHOC=dispatch=>val=>()=>{
-    const {value}=setMacaroon(dispatch)(val)()
-    if(value){
-        checkConnection(dispatch)({...val, encryptedMacaroon:value})()
+    const encryptedMacaroon=setMacaroon(dispatch)(val)()
+    const savedHostname=setHostname(dispatch)(val)()
+    const options={
+        ...val, 
+        encryptedMacaroon:encryptedMacaroon||val.encryptedMacaroon,
+        savedHostname:savedHostname||val.savedHostname
     }
-    else{
-        checkConnection(dispatch)(val)()
-    }
+    checkConnection(dispatch)(options)()
+   
 }
 const mapDispatchToPropsConnectButton=dispatch=>({
     handleConnect:createConnectHOC(dispatch)  
@@ -86,7 +88,7 @@ export const CreateInvoiceButton=connect(
 )(LndButton)
 
 
-const mapStateToPropsSendPayment=({signin, connection, encryptedMacaroon, payment})=>({
+const mapStateToPropsSendPayment=({connection, encryptedMacaroon, payment})=>({
     isConnecting:connection.isConnecting,
     paymentRequest:payment,
     encryptedMacaroon

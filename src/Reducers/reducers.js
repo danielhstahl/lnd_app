@@ -1,4 +1,4 @@
-import signin, {encryptedMacaroonReducer, passwordReducer} from './signInReducer'
+import signin, {encryptedMacaroonReducer, passwordReducer, hostnameReducer} from './signInReducer'
 import connection from './connectReducer'
 import drawer from './homeReducer'
 import network from './networkInformation'
@@ -14,6 +14,7 @@ export default combineReducers({
     network,
     encryptedMacaroon:encryptedMacaroonReducer,
     passwordError:passwordReducer,
+    savedHostname:hostnameReducer,
     invoice,
     payment,
     paymentRequest,

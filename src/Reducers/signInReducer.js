@@ -3,9 +3,11 @@ import {
     REMOVE_MACAROON,
     SET_ENCRYPTED_MACAROON,
     PASSWORD_ERROR,
-    PASSWORD_RESET
+    PASSWORD_RESET,
+    SET_HOSTNAME,
+    REMOVE_HOSTNAME
 } from 'Actions/actionDefinitions'
-import {encryptedMacaroon} from 'utils/localStorage'
+import {encryptedMacaroon, hostname} from 'utils/localStorage'
 export const encryptedMacaroonReducer=(state=encryptedMacaroon||null, action)=>{
     switch(action.type){
         case REMOVE_MACAROON:
@@ -16,6 +18,18 @@ export const encryptedMacaroonReducer=(state=encryptedMacaroon||null, action)=>{
             return state
     }
 }
+
+export const hostnameReducer=(state=hostname||null, action)=>{
+    switch(action.type){
+        case REMOVE_HOSTNAME:
+            return ''
+        case SET_HOSTNAME:
+            return action.value
+        default:
+            return state
+    }
+}
+
 export const passwordReducer=(state=false, action)=>{
     switch(action.type){
         case PASSWORD_ERROR:

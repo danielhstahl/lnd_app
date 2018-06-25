@@ -14,7 +14,7 @@ import {
 import crypto from 'crypto'
 import {delay} from '../utils/componentUtils'
 import { convertBTCToSatoshi } from 'utils/btcUtils'
-const formUrl=(...extensions)=>`/v1/${extensions.join('/')}`
+const formUrl=(hostname, ...extensions)=>`https://${hostname}/v1/${extensions.join('/')}`
 
 const getLightningRequest=({macaroon, method, endpoint, ...rest})=>{
     const headers = new Headers({
@@ -39,7 +39,7 @@ const dispatchError=dispatch=>err=>{
         type:CONNECT_FAILED
     })
 }
-const connectFactory=fn=>dispatch=>({password, encryptedMacaroon, ...rest})=>()=>{
+const connectFactory=fn=>dispatch=>({password, savedHostname, encryptedMacaroon, ...rest})=>()=>{
     let macaroon
     try{
         macaroon=getMacaroon({password, encryptedMacaroon})
@@ -59,7 +59,7 @@ const connectFactory=fn=>dispatch=>({password, encryptedMacaroon, ...rest})=>()=
         type:ATTEMPT_CONNECT,
         value:true
     })
-    return fn(dispatch)({macaroon, ...rest})
+    return fn(dispatch)({macaroon, hostname:savedHostname, ...rest})
         .then(()=>dispatch({
             type:ATTEMPT_CONNECT,
             value:false
@@ -117,21 +117,21 @@ const generateNotify=dispatch=>()=>{
         notifyTime
     )
 }
-const getBalanceLocal=dispatch=>({macaroon})=>{
+const getBalanceLocal=dispatch=>({macaroon, hostname})=>{
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
-        endpoint:formUrl('balance', 'blockchain')
+        endpoint:formUrl(hostname, 'balance', 'blockchain')
     })
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_BALANCE))
 }
 /**three possible outcomes: no connection, connection but locked, connection and unlocked */
-const checkConnectionLocal=dispatch=>({macaroon})=>{
+const checkConnectionLocal=dispatch=>({macaroon, hostname})=>{
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
-        endpoint:formUrl('getinfo')
+        endpoint:formUrl(hostname, 'getinfo')
     })
     getBalanceLocal(dispatch)({macaroon})
     return fetch(req)
@@ -139,11 +139,11 @@ const checkConnectionLocal=dispatch=>({macaroon})=>{
         .then(generateNotify(dispatch))
 }
 
-const unlockWalletLocal=dispatch=>({macaroon, walletPassword})=>{
+const unlockWalletLocal=dispatch=>({macaroon, walletPassword, hostname})=>{
     const req=getLightningRequest({
         macaroon, 
         method:'POST', 
-        endpoint:formUrl('unlockwallet'),
+        endpoint:formUrl(hostname, 'unlockwallet'),
         body:JSON.stringify({wallet_password:btoa(walletPassword)})
     })
     return fetch(req) //oddly enough, returns {"error":"context canceled","code":1}
@@ -152,42 +152,42 @@ const unlockWalletLocal=dispatch=>({macaroon, walletPassword})=>{
         .then(()=>checkConnectionLocal(dispatch)({macaroon})) 
 }
 
-const getTransactionsLocal=dispatch=>({macaroon})=>{
+const getTransactionsLocal=dispatch=>({macaroon, hostname})=>{
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
-        endpoint:formUrl('transactions')
+        endpoint:formUrl(hostname, 'transactions')
     })
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_TRANSACTIONS))
 }
 
-const getInvoicesLocal=dispatch=>({macaroon})=>{
+const getInvoicesLocal=dispatch=>({macaroon, hostname})=>{
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
-        endpoint:formUrl('invoices?pending_only=true')
+        endpoint:formUrl(hostname, 'invoices?pending_only=true')
     })
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_INVOICES))
 }
 
-const createInvoiceLocal=dispatch=>({macaroon, amount, memo})=>{
+const createInvoiceLocal=dispatch=>({macaroon, hostname, amount, memo})=>{
     console.log(convertBTCToSatoshi(amount))
     const req=getLightningRequest({
         macaroon, 
         method:'POST', 
-        endpoint:formUrl('invoices'),
+        endpoint:formUrl(hostname, 'invoices'),
         body:JSON.stringify({value:convertBTCToSatoshi(amount), memo})
     })
     return fetch(req)
         .then(()=>getInvoicesLocal(dispatch)({macaroon}))
 }
-const sendPaymentLocal=dispatch=>({macaroon, paymentRequest})=>{
+const sendPaymentLocal=dispatch=>({macaroon, hostname, paymentRequest})=>{
     const req=getLightningRequest({
         macaroon, 
         method:'POST', 
-        endpoint:formUrl('channels', 'transactions'),
+        endpoint:formUrl(hostname, 'channels', 'transactions'),
         body:JSON.stringify({payment_request:paymentRequest})
     })
     return fetch(req)

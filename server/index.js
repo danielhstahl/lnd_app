@@ -1,11 +1,22 @@
 const express=require('express')
+const fs=require('fs')
 //const expressStaticGzip = require("express-static-gzip")
 const path=require('path')
 const app=express()
 const https=require('https')
+
+const key = fs.readFileSync('/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/privkey.pem')
+var cert = fs.readFileSync( '/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/fullchain.pem')
+
+
+const options={
+    key,
+    cert
+}
+https.createServer(options, app).listen(443)
+
 const lightning_host=process.env.HOST_NAME||'localhost'
 const lightning_port=process.env.HOST_PORT||8080
-const port=process.env.PORT||8081
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 //app.use('/', expressStaticGzip(path.join(__dirname, 'static')))
@@ -39,9 +50,9 @@ const sendItemToServer=(req, res)=>{
 }
 app.all('/v1/*', sendItemToServer)
 
-app.set('port', port)
-
+//app.set('port', port)
+/*
 app.listen(app.get('port'), () => {
-    console.log('Node app is running on port', port)
+    //console.log('Node app is running on port', port)
     console.log('Proxying to', lightning_host, ':', lightning_port)
-})
+})*/
