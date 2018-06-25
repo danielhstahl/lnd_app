@@ -1,4 +1,4 @@
-import {eventOrValue} from 'utils/componentUtils'
+import {eventOrValue, delay} from 'utils/componentUtils'
 
 describe('eventOrValue', ()=>{
     it('returns value when event', ()=>{
@@ -28,5 +28,21 @@ describe('eventOrValue', ()=>{
             }
         }
         expect(eventOrValue(event)).toEqual('')
+    })
+})
+
+describe('delay', ()=>{
+    jest.useFakeTimers()
+    it('correctly calls function after 5 seconds', ()=>{
+        
+        delay(5000)
+        expect(setTimeout).toHaveBeenCalledTimes(1)
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 5000)
+    })
+    
+    it('correctly returns promise after 5 seconds', ()=>{
+        delay(5000).then(()=>{
+            return expect(true).toEqual(true)
+        })
     })
 })

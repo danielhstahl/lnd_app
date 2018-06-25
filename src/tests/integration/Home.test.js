@@ -186,6 +186,11 @@ describe('integrations', ()=>{
         expect(passwordInput.length).toEqual(1)
         passwordInput.props().onChange({target:{value:'password'}})
         app.update() 
+        /**simulate hostname */
+        const hostnameInput=app.findWhere(val=>textContent(val)==='Lightning Host Name').find(Input)
+        expect(hostnameInput.length).toEqual(1)
+        hostnameInput.props().onChange({target:{value:'host'}})
+        app.update() 
         /**Simulate click of button */
         const conButton=app.find(ConnectButton).find(Button)
         expect(conButton.text()).toEqual('Save and Connect')
@@ -224,6 +229,11 @@ describe('integrations', ()=>{
         const passwordInput=app.findWhere(val=>textContent(val)==='Password').find(Input)
         expect(passwordInput.length).toEqual(1)
         passwordInput.props().onChange({target:{value:'password'}})
+        app.update() 
+        /**simulate hostname */
+        const hostnameInput=app.findWhere(val=>textContent(val)==='Lightning Host Name').find(Input)
+        expect(hostnameInput.length).toEqual(1)
+        hostnameInput.props().onChange({target:{value:'host'}})
         app.update() 
         /**Simulate click of button */
         const conButton=app.find(ConnectButton).find(Button)
