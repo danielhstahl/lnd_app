@@ -1,9 +1,14 @@
 const express=require('express')
 const fs=require('fs')
 const cors = require('cors')
-//const path=require('path')
 const app=express()
 const https=require('https')
+
+const local_port=process.env.LOCAL_PORT||8081
+const lightning_host=process.env.HOST_NAME||'localhost'
+const lightning_port=process.env.HOST_PORT||8080
+const path_to_keys=process.env.FILE_CERT
+
 
 const corsOptions = {
     origin: 'https://phillyfan1138.github.io/lnd_app',
@@ -11,20 +16,14 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
-const key = fs.readFileSync('/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/privkey.pem')
-var cert = fs.readFileSync( '/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/fullchain.pem')
+const key = fs.readFileSync(`${path_to_keys}/privkey.pem`)
+var cert = fs.readFileSync( `${path_to_keys}/fullchain.pem`)
 
-const options={
-    key,
-    cert
-}
-const local_port=process.env.LOCAL_PORT||8081
-const lightning_host=process.env.HOST_NAME||'localhost'
-const lightning_port=process.env.HOST_PORT||8080
+const options={key, cert}
+
 https.createServer(options, app).listen(local_port)
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
-//app.use(express.static(path.join(__dirname)))
 const sendItemToServer=(req, res)=>{
     const headerKey='grpc-metadata-macaroon'
     const getHeader=req.headers[headerKey]

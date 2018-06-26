@@ -1,8 +1,8 @@
 language: node_js
 addons:
-    apt:
-        packages:
-            - sshpass
+  apt:
+    packages:
+    - sshpass
 node_js:
 - stable
 cache:
@@ -18,14 +18,16 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 - export SSHPASS=$DEPLOY_PASS
 - sshpass -e ssh -p 2222 $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; rm -r *;"
-- sshpass -e scp -P 2222 -r ./server/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH 
-- sshpass -e ssh -p 2222 $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; npm install; nohup npm start > /dev/null 2>&1 &"
+- sshpass -e scp -P 2222 -r ./server/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+- sshpass -e ssh -p 2222 $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; npm install;
+  nohup npm start > /dev/null 2>&1 &"
 env:
   global:
   - secure: UWmepZ86xoziPL/RwJRsA1EenB8Q8fIOAThgalcVWOA1P7+6hmmvV7CY9SdfGNsNnrX6sQU1Skgw23rRvipEu1ScVgk88kwyyVEpXD4yY/MAOJZnYcp8ADpEHPUK6d7HTPFPWagzNGGD1GZD0Bk0VXH2v/9UlPo0godtlvCOfcBPhVvEEN+9VwlZQlBxY4EEhvRty/xGcPCbaEpthIOs7OJGrhIi6k4MRTBK7ZAzCOECQRyFlTBgUrxJFO3fjythPBni0l9k3aU0xxSIIzAXppDSDw0rIC0jeD2S9oWFlq0nEH4ZAjXqSl/8RQjbiEdJO9DT6mZqpiRQAz+ZKXoEHoV64HdxGBnAVHVrFpxHfglhJRIAmQU+upmwnejrQv4kvJumhbWFbZK0TNcOSYfUIEQk2g3nM9bHrmsCfg6jp9g84UZExsIHqL/yxJdAUALbQZD3IXKoqRxuzF1+hrPIMHlzhWxMJidXU4WFMb+cvCRMY1VcpF7rMsf/E8oV3rZbOpFeKgr3W+MHv3F3tGtGfO1fBOkLDvCL0RC+bXgwhk1JZJSCvH7NfreO7plNHX7ExoZVlzCo6lcQe3L2yN2HKiBG2F3CvrZVaKzCmDC4oVTyEcxajRan/3HBCHz5PtyTcN9ap0aN1ulJ4yt19lHKJraP7EEKLpnskseJRaecvwo=
   - secure: V+EsNpY050eb2qLaFXcx+Eue38XzLbV1U38TiALYo+ACFFELrFTkNIYSCqBh556mnzdYdSY7897cYTND27Cf5JIRvZqsE/ePWYFbeXGYYs+SaNYpJTY6a/GkCKF2W0d8t1ae2mPTzivIAn9ycuHl4eKxGRoCuRFGxGT41oEbkYA4RR5YksnWUu5+4vZSeuH3GjrwosjtpvQI+yBhNufuHeUpNCvX7f2CyvP4rRAlO1HZHt5341CKe7NPJa2U3JJFoH5Jks7phxv7OMHAWeePzvkPAywM2N4esbP+VbEMtLeQE2kh6UiaiuoM+S3HPoQFrLEul8WOLrnuvwRyIlxOe2KfUjw+nUBRCAxtSg2Ek2KlhRvdHcrsLZVaqCcz6fmiz/36SZyzlflOd7BWuF50srLUDS42Xh0jNKypM/24hzoETvNvWe8sYl0pXxCd9FrzjisejyfEZ/YaKKOOPJfZnGqCH9gchxzlDLUo1yXdLbDIaxjUuF3ARQUcNOVNuqBlxunFmQ8xA2CWOqidkuZHiiTR5O3f5ZfjB19Leza7MuR/JsO/z58gKBYqZJZAZ3sSNCPf9tImzDE3AXxGtHSNu0DIqSkQTAvlI5KmbwaYBWcKjnDhHCRWrTBPIq78grrhBZ/ZMm/ugwdgnW+9tIP2DgCo3rKXiwsYEZPko6oA8Lo=
   - secure: FfVJNCwQDs2MhE2iZy4OTlp2inENT9/DOsFP1AVVSlYLt1jUTZIjpbbkSYdHXdq26GKfu3geguXekcucF/mihepDP1wkid9HpZful7Jn+OFkKfTZz4sj4So1Ij4N2wFHw8qk475QO7VfCRUqxDfCjZq4tswADmwUAbiphjTKjo1jQtuFqXeKyguY5911gP0t0Henu4ogeTJcpPsDaoGq6xGrui6EaqFF6giP/3AqKNZ1MrCV9cJg36pwWxEgfBnmbZqQoIMgQghURrdhzcHQjUfYsdRO3lIAcb2qRPg6Vfbk5sWgehB+IZNMFfm2zjreNM/df89pqyRn62h2qvXEzNlMnNCQfbm70+hptulJhkbSu3tGZ4HE7SE+JIHQEUmZKAMTO9CsLyjHI73mH6phknsd5gbtNiOVltthUjAS/BB6L9vcaT8yFphTTjASB1tGbHVJyJ39eGAtCTcIr23TEpAgFXLOYWE+Jab04IfQgwUoM80GnGAqd8h8n3B8woyZGErMdH7Zlos2BR93egKc/z4cKhJP1mQB/rlo2GswJD7Emny2+7DrYjV8mmK3Q48puTjqrqmFy4JWUkr+64YL+33514vpvUua1mkIAP743TjcKAYuEDPLh6QMiMX7gNZoE1VPVF57XQSYOa/JvRFQUMVp7XAREL5pDV1TympKczQ=
   - secure: XeTFHhvgz92oMevRHJLdACBHHw8cybsMfQqyJ+8UgnHIsxc8Ye66qIJrAp9AZ4f5LyZZyEbqINUTIu6JjpDJVbrO/RovgVidZyVxJbktbvVKJUJZM6gzD9vvzzvjknlRDrTShrzTnqVEYDzjAfDi7L/p+Ni8v8aQPdwtCfYhjPQmyWoPlK+K1P2ZECIPEruDsy/7QgwZwCmKhn9GTZImQ6HNDC+oHOzelQgkp32YW27TwIbpZlJmBwtoob2MPBNqNzo6W2ZeqF98ngJIJOoKukjd0Tn+Fa7sWgY202DTVcEpFNGrYr3FrSLAagXDaEK8B2gGqJGRxl4BkMltR2s3YoJrqSB3wlNtjSRLHOWeHBR7fWJ4Fw3/uU91V6MJWrst6L9N/jnXGff9mYtVeh/fyHlVS6xOmrS6fbiDW9fRdfc8Vi88ThNal2yxCzP9NFpDCzJP7oHR5RMWbvrMj5gTIYFywlfAIuS+ugdiYikY2XIvHFI9KVsyLr8k6tYcUuh3RJycgkGnQtkz1OCLvLTafgpLsxYyIMv7EN26w+y6ZKDtG0fyD1lBovVe5Bxwq3GejpSd3yFCVgTfGJuvmqS7+z8CPEtP0Z3bLPkA57gQGKuBKcVZRHk2dAtrPmbrobp/jeVbyoNe45B1dQE6x/1ca/7tW2MEWM3cxMYCqpejEkA=
+  - secure: U5VqY8yl+jXsqM62SlcZMFmoPUhbnPSip9zKQkmGFD07lRZgLC4vM0Mo5XSY6UgjzPU+wUhBfmonSs14mIg30aojFfPDv/pmnI3Ru9fY00b4MdGPl/ue05qFuRb94pL//m1ZPJcHH4o78vxqG63FzZFhqLGGH00I1Mt0xTyICW2lJbIRENncVA7S77iS+o7dV0uKGcn8H/+jZxzthoQPIXzjs2yd3auXYEy7b2ZKi/GPhubQ7YtwoQCiAdqNlRmzzom43jYdWYCCdfsFSz/6Z7GgY6jmjAiagaZgfHTwA8ucGYp1ZN3L196V1OEcoUh2xoHcTCY49gOob2A3mzg8ha2eaE21Dy6PEUtLw+u2ZnQZNQder672M321k+CdZNWShNIxrY2f0g3ioox+5xOZuUdvZhL+o7IrjSk+ECq74y+0Jf+xWpLXXKn/+HMZRW7qj9yTgjsEFu907oNoi2x7WQrkp114AGsKTCd0rjfy44F/uF40G/+Buoig6fpgnn87KKNxqL7S307ZkD/xJE/7GP9beoS30VPo3eVzcVR98Gs4D4g/9gr//FpVrfz/j5OAOuuqqLg4TzmX/irS8PhCPgfQkkSxsoQdMOWC11ZRIK+HLfOx69H1HC3CjpZXNYC33Jh8ZWwjJiuMMwsejpyYz4+PXw2KFto2XUSP+pMnQx8=
 deploy:
   provider: pages
   skip_cleanup: true
