@@ -1,8 +1,15 @@
 const express=require('express')
 const fs=require('fs')
-const path=require('path')
+const cors = require('cors')
+//const path=require('path')
 const app=express()
 const https=require('https')
+
+const corsOptions = {
+    origin: 'https://phillyfan1138.github.io/lnd_app',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 
 const key = fs.readFileSync('/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/privkey.pem')
 var cert = fs.readFileSync( '/etc/letsencrypt/live/lightningnetwork.chickenkiller.com/fullchain.pem')
@@ -11,10 +18,10 @@ const options={
     key,
     cert
 }
-https.createServer(options, app).listen(443)
-
+const local_port=process.env.LOCAL_PORT||8081
 const lightning_host=process.env.HOST_NAME||'localhost'
 const lightning_port=process.env.HOST_PORT||8080
+https.createServer(options, app).listen(local_port)
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 //app.use(express.static(path.join(__dirname)))

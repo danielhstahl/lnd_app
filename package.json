@@ -2,10 +2,13 @@
   "name": "lnd_app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://phillyfan1138.github.io/lnd_app",
   "dependencies": {
     "@material-ui/core": "^1.2.1",
     "@material-ui/icons": "^1.1.0",
     "big.js": "^5.1.2",
+    "cors": "^2.8.4",
+    "gh-pages": "^1.2.0",
     "prop-types": "^15.6.1",
     "qrcode.react": "^0.8.0",
     "react": "^16.4.0",
@@ -19,7 +22,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && cp ./server/index.js ./build && cp ./server/package.json ./build && cp ./server/package-lock.json ./build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
