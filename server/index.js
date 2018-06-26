@@ -11,8 +11,8 @@ const path_to_keys=process.env.FILE_CERT
 
 
 const corsOptions = {//
-    origin: 'phillyfan1138.github.io',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    origin: 'https://phillyfan1138.github.io/lnd_app',
+    //optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions))
 
