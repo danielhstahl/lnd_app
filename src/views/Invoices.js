@@ -32,7 +32,9 @@ export const PendingInvoices=withStyles(styles)(({
     password, classes, 
     getInvoices, showQR,
     paymentRequest, savedHostname
-})=>(
+})=>{
+    console.log(savedHostname)
+    return (
     <ShowLockedMessage>
         <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon, savedHostname})}>
             <Grid container>
@@ -59,7 +61,8 @@ export const PendingInvoices=withStyles(styles)(({
             </Grid>
         </AsyncHOC>
     </ShowLockedMessage>
-))
+)
+})
 PendingInvoices.propTypes={
     invoices:PropTypes.shape({
         invoices:PropTypes.arrayOf(PropTypes.shape({
