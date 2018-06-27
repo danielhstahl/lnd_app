@@ -1,3 +1,12 @@
+| [Linux][lin-link] | [Codecov][cov-link] |
+| :---------------: | :-----------------: |
+| ![lin-badge]      | ![cov-badge]        |
+
+[lin-badge]: https://travis-ci.org/phillyfan1138/lnd_app.svg?branch=master "Travis build status"
+[lin-link]:  https://travis-ci.org/phillyfan1138/lnd_app "Travis build status"
+[cov-badge]: https://codecov.io/gh/phillyfan1138/lnd_app/branch/master/graph/badge.svg
+[cov-link]:  https://codecov.io/gh/phillyfan1138/lnd_app
+
 # lnd_app
 
 Decentralized web application for the Bitcoin Lightning Network.  
