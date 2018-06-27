@@ -8,6 +8,7 @@ import {
     REMOVE_HOSTNAME
 } from 'Actions/actionDefinitions'
 import {encryptedMacaroon, hostname} from 'utils/localStorage'
+console.log(hostname)
 export const encryptedMacaroonReducer=(state=encryptedMacaroon||null, action)=>{
     switch(action.type){
         case REMOVE_MACAROON:
@@ -24,6 +25,7 @@ export const hostnameReducer=(state=hostname||null, action)=>{
         case REMOVE_HOSTNAME:
             return ''
         case SET_HOSTNAME:
+            console.log(action.value)
             return action.value
         default:
             return state

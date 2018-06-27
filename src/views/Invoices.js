@@ -80,11 +80,11 @@ PendingInvoices.propTypes={
     paymentRequest:PropTypes.string
 }
 
-const mapStateToProps=({paymentRequest, network, encryptedMacaroon, signin, savedHostName})=>({
+const mapStateToProps=({paymentRequest, network, encryptedMacaroon, signin, savedHostname})=>({
     password:signin.password,
     encryptedMacaroon,
     invoices:network.invoices,
-    paymentRequest, savedHostName
+    paymentRequest, savedHostname
 })
 const showQR=dispatch=>paymentRequest=>()=>{
     toggleQRShow(dispatch)()
