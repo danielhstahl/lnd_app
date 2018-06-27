@@ -133,7 +133,7 @@ const checkConnectionLocal=dispatch=>({macaroon, hostname})=>{
         method:'GET', 
         endpoint:formUrl(hostname, 'getinfo')
     })
-    getBalanceLocal(dispatch)({macaroon})
+    getBalanceLocal(dispatch)({macaroon, hostname})
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_INFO))
         .then(generateNotify(dispatch))
