@@ -59,6 +59,7 @@ const connectFactory=fn=>dispatch=>({password, savedHostname, encryptedMacaroon,
         type:ATTEMPT_CONNECT,
         value:true
     })
+    console.log(savedHostname)
     return fn(dispatch)({macaroon, hostname:savedHostname, ...rest})
         .then(()=>dispatch({
             type:ATTEMPT_CONNECT,
@@ -153,6 +154,7 @@ const unlockWalletLocal=dispatch=>({macaroon, walletPassword, hostname})=>{
 }
 
 const getTransactionsLocal=dispatch=>({macaroon, hostname})=>{
+    console.log(hostname)
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
@@ -163,6 +165,7 @@ const getTransactionsLocal=dispatch=>({macaroon, hostname})=>{
 }
 
 const getInvoicesLocal=dispatch=>({macaroon, hostname})=>{
+    console.log(hostname)
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
@@ -181,7 +184,7 @@ const createInvoiceLocal=dispatch=>({macaroon, hostname, amount, memo})=>{
         body:JSON.stringify({value:convertBTCToSatoshi(amount), memo})
     })
     return fetch(req)
-        .then(()=>getInvoicesLocal(dispatch)({macaroon}))
+        .then(()=>getInvoicesLocal(dispatch)({macaroon, hostname}))
 }
 const sendPaymentLocal=dispatch=>({macaroon, hostname, paymentRequest})=>{
     const req=getLightningRequest({
@@ -191,7 +194,7 @@ const sendPaymentLocal=dispatch=>({macaroon, hostname, paymentRequest})=>{
         body:JSON.stringify({payment_request:paymentRequest})
     })
     return fetch(req)
-        .then(()=>getInvoicesLocal(dispatch)({macaroon}))
+        .then(()=>getInvoicesLocal(dispatch)({macaroon, hostname}))
 }
 
 export const checkConnection=connectFactory(checkConnectionLocal)

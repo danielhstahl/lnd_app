@@ -23,9 +23,9 @@ const parseData=({transactions})=>transactions?transactions.map(({tx_hash, amoun
     convertDateToString(convertNixTimestamp(time_stamp)),
     convertSatoshiToBTC(total_fees)
 ]):[]
-export const Transactions=withStyles(styles)(({transactions, encryptedMacaroon, password, classes, getTransactions})=>(
+export const Transactions=withStyles(styles)(({transactions, encryptedMacaroon, password, classes, getTransactions, savedHostname})=>(
 <ShowLockedMessage>
-    <AsyncHOC onLoad={getTransactions({password, encryptedMacaroon})}>
+    <AsyncHOC onLoad={getTransactions({password, encryptedMacaroon, savedHostname})}>
         <Grid container>
         <GridItem xs={12} sm={12} md={12}>
             <Card>
@@ -67,9 +67,10 @@ Transactions.propTypes={
     getTransactions:PropTypes.func.isRequired
 }
 
-const mapStateToProps=({signin, network, encryptedMacaroon})=>({
+const mapStateToProps=({signin, network, encryptedMacaroon, savedHostname})=>({
     password:signin.password,
     encryptedMacaroon,
+    savedHostname,
     transactions:network.transactions
 })
 

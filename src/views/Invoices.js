@@ -31,10 +31,10 @@ export const PendingInvoices=withStyles(styles)(({
     invoices, encryptedMacaroon, 
     password, classes, 
     getInvoices, showQR,
-    paymentRequest
+    paymentRequest, savedHostname
 })=>(
     <ShowLockedMessage>
-        <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon})}>
+        <AsyncHOC onLoad={getInvoices({password, encryptedMacaroon, savedHostname})}>
             <Grid container>
                 <QRView qrRaw={paymentRequest}/>
                 <GridItem xs={12} sm={12} md={8}>
@@ -77,11 +77,11 @@ PendingInvoices.propTypes={
     paymentRequest:PropTypes.string
 }
 
-const mapStateToProps=({paymentRequest, network, encryptedMacaroon, signin})=>({
+const mapStateToProps=({paymentRequest, network, encryptedMacaroon, signin, savedHostName})=>({
     password:signin.password,
     encryptedMacaroon,
     invoices:network.invoices,
-    paymentRequest
+    paymentRequest, savedHostName
 })
 const showQR=dispatch=>paymentRequest=>()=>{
     toggleQRShow(dispatch)()

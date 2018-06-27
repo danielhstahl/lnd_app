@@ -75,11 +75,12 @@ const createInvoiceHOC=dispatch=>val=>()=>{
 const mapDispatchToPropsCreateInvoice=dispatch=>({
     handleConnect:createInvoiceHOC(dispatch)
 })
-const mapStateToPropsCreateInvoice=({signin, connection, encryptedMacaroon, invoice})=>({
+const mapStateToPropsCreateInvoice=({signin, connection, encryptedMacaroon, savedHostname, invoice})=>({
     isConnecting:connection.isConnecting,
     ...signin,
     ...invoice,
     encryptedMacaroon,
+    savedHostname
     //amount:invoice.amount
 })
 export const CreateInvoiceButton=connect(
@@ -88,10 +89,11 @@ export const CreateInvoiceButton=connect(
 )(LndButton)
 
 
-const mapStateToPropsSendPayment=({connection, encryptedMacaroon, payment})=>({
+const mapStateToPropsSendPayment=({connection, encryptedMacaroon, payment, savedHostname})=>({
     isConnecting:connection.isConnecting,
     paymentRequest:payment,
-    encryptedMacaroon
+    encryptedMacaroon, 
+    savedHostname
 })
 const mapDispatchToPropsSendPayment=dispatch=>({
     handleConnect:sendPayment(dispatch)
