@@ -25,14 +25,14 @@ export const removeHostname=dispatch=>()=>{
         type:REMOVE_HOSTNAME
     })
 }
-export const setHostname=dispatch=>({savedHostname})=>()=>{
-    if(savedHostname){
-        localStorage.setItem('hostname', savedHostname)
+export const setHostname=dispatch=>({hostname})=>()=>{
+    if(hostname){
+        localStorage.setItem('hostname', hostname)
         dispatch({
             type:SET_HOSTNAME,
-            value:savedHostname
+            value:hostname
         })
-        return savedHostname
+        return hostname
     }
     
 }

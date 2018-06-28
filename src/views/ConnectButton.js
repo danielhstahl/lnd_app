@@ -43,6 +43,7 @@ const mapStateToProps=({signin, connection, encryptedMacaroon, savedHostname})=>
 
 const createConnectHOC=dispatch=>val=>()=>{
     const encryptedMacaroon=setMacaroon(dispatch)(val)()
+    console.log(val)
     const savedHostname=setHostname(dispatch)(val)()
     const options={
         ...val, 

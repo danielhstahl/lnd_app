@@ -9,7 +9,6 @@ import {combineReducers} from 'redux'
 const generateReducer=type=>(state={}, action)=>{
     switch(action.type){
         case type:
-            console.log(action.value)
             return action.value
         default:
             return state
