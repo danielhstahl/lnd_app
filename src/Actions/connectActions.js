@@ -59,7 +59,6 @@ const connectFactory=fn=>dispatch=>({password, savedHostname, encryptedMacaroon,
         type:ATTEMPT_CONNECT,
         value:true
     })
-    console.log(savedHostname)
     return fn(dispatch)({macaroon, hostname:savedHostname, ...rest})
         .then(()=>dispatch({
             type:ATTEMPT_CONNECT,

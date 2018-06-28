@@ -41,7 +41,6 @@ const sendItemToServer=(req, res)=>{
             result+=d
         })
         serverResult.on('end', ()=>{
-            console.log(result)
             res.send(result)
         })
     })
