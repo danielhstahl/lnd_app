@@ -153,7 +153,6 @@ const unlockWalletLocal=dispatch=>({macaroon, walletPassword, hostname})=>{
 }
 
 const getTransactionsLocal=dispatch=>({macaroon, hostname})=>{
-    console.log(hostname)
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
@@ -164,7 +163,6 @@ const getTransactionsLocal=dispatch=>({macaroon, hostname})=>{
 }
 
 const getInvoicesLocal=dispatch=>({macaroon, hostname})=>{
-    console.log(hostname)
     const req=getLightningRequest({
         macaroon, 
         method:'GET', 
@@ -175,7 +173,6 @@ const getInvoicesLocal=dispatch=>({macaroon, hostname})=>{
 }
 
 const createInvoiceLocal=dispatch=>({macaroon, hostname, amount, memo})=>{
-    console.log(convertBTCToSatoshi(amount))
     const req=getLightningRequest({
         macaroon, 
         method:'POST', 
