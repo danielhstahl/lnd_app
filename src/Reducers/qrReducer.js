@@ -1,4 +1,4 @@
-import { TOGGLE_QR, TOGGLE_SHOW_RAW } from "../Actions/actionDefinitions"
+import { TOGGLE_QR, TOGGLE_SHOW_RAW, TOGGLE_SHOW_RAW_MACAROON } from "../Actions/actionDefinitions"
 import {combineReducers} from 'redux'
 
 const generateBool=(defaultState, type)=>(state=defaultState, action)=>{
@@ -12,9 +12,11 @@ const generateBool=(defaultState, type)=>(state=defaultState, action)=>{
 
 const open=generateBool(false, TOGGLE_QR)
 const showRaw=generateBool(false, TOGGLE_SHOW_RAW)
+const showRawMacaroon=generateBool(false, TOGGLE_SHOW_RAW_MACAROON)
 
 
 export default combineReducers({
     open,
-    showRaw
+    showRaw,
+    showRawMacaroon
 })

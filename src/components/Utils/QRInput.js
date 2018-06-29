@@ -1,23 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
-import QrReader from 'react-qr-reader'
+import QrReader from 'react-qr-scanner'
 import {updatePaymentRequest} from 'Actions/paymentActions'
 import {updateSignIn} from 'Actions/signInActions'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
-import {toggleQRRaw} from 'Actions/qrActions'
+import {toggleQRRaw, toggleQRRawMacaroon} from 'Actions/qrActions'
 import Button from 'components/CustomButtons/Button'
 import { withStyles } from '@material-ui/core/styles'
-const style=theme=>({
+/*const style=theme=>({
     qr:{
         [theme.breakpoints.up("md")]:{
             width:'60%'
         },    
         margin: 'auto'
     }
-})
+})*/
 const formControlProps={fullWidth:true}
-export const QRInput=withStyles(style)(({
+export const QRInput=/*withStyles(style)(*/({
     showRaw, labelText,
     value, onChange, classes
 })=>showRaw?
@@ -31,12 +31,14 @@ export const QRInput=withStyles(style)(({
         formControlProps={formControlProps}
     />:
     <QrReader 
-        className={classes.qr} 
+        //className={classes.qr} 
+        //maxImageSize={600}
+        style={{width:'85%', margin:'auto'}}
         onError={err=>console.log(err)}
         onScan={onChange}
-        showViewFinder={false}
+        //showViewFinder={false}
     />
-)
+
 
 QRInput.propTypes={
     showRaw:PropTypes.bool.isRequired,
@@ -51,7 +53,12 @@ const mapStateToPropsPaymentRequest=({qr, payment})=>({
 })
 
 const mapDispatchToPropsPaymentRequest=dispatch=>({
-    onChange:updatePaymentRequest(dispatch)
+    onChange:value=>{
+        if(value){
+            updatePaymentRequest(dispatch)(value)
+            toggleQRRaw(dispatch)()
+        }
+    }
 })
 
 export const QRInputPaymentRequest=connect(
@@ -65,7 +72,12 @@ const mapStateToPropsMacaroon=({qr, signin})=>({
 })
 
 const mapDispatchToPropsMacaroon=dispatch=>({
-    onChange:updateSignIn(dispatch)('macaroon')
+    onChange:value=>{
+        if(value){
+            updateSignIn(dispatch)('macaroon')(value)
+            toggleQRRawMacaroon(dispatch)()
+        }   
+    }
 })
 
 export const QRInputMacaroon=connect(
@@ -79,6 +91,12 @@ const mapStateToPropsToggle=({qr})=>({
 const mapDispatchToPropsToggle=dispatch=>({
     toggleRaw:toggleQRRaw(dispatch)
 })
+const mapStateToPropsToggleMacaroon=({qr})=>({
+    showRaw:qr.showRawMacaroon
+})
+const mapDispatchToPropsToggleMacaroon=dispatch=>({
+    toggleRaw:toggleQRRawMacaroon(dispatch)
+})
 export const ToggleButton=({toggleRaw, showRaw, styles})=>(
     <Button color='primary' onClick={toggleRaw} {...styles}>
         {showRaw?'Scan QR':'Show Raw String'}
@@ -87,4 +105,9 @@ export const ToggleButton=({toggleRaw, showRaw, styles})=>(
 export const ToggleQRButton=connect(
     mapStateToPropsToggle,
     mapDispatchToPropsToggle
+)(ToggleButton)
+
+export const ToggleQRButtonMacaroon=connect(
+    mapStateToPropsToggleMacaroon,
+    mapDispatchToPropsToggleMacaroon
 )(ToggleButton)

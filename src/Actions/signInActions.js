@@ -7,12 +7,18 @@ import {
 } from '../Actions/actionDefinitions'
 import {eventOrValue} from 'utils/componentUtils'
 import crypto from 'crypto'
-export const updateSignIn=dispatch=>key=>e=>dispatch({
-    type:ENTER_SIGN_IN,
-    key,
-    value:eventOrValue(e)
-})
-
+export const updateSignIn=dispatch=>key=>e=>{
+    const value=eventOrValue(e)
+    //console.log(value)
+    //if(value){
+    dispatch({
+        type:ENTER_SIGN_IN,
+        key,
+        value
+    })
+    //}
+    
+}
 export const removeMacaroon=dispatch=>()=>{
     localStorage.removeItem('macaroon')
     dispatch({

@@ -1,5 +1,5 @@
 import React from 'react'
-import {QRInputMacaroon, ToggleQRButton} from 'components/Utils/QRInput'
+import {QRInputMacaroon, ToggleQRButtonMacaroon} from 'components/Utils/QRInput'
 import Card from 'components/Card/Card'
 import CardHeader from 'components/Card/CardHeader'
 import CardActions from '@material-ui/core/CardActions'
@@ -103,7 +103,7 @@ const SignIn=withStyles(styles)(({
                     >
                         {encryptedMacaroon?'Connect':'Save and Connect'}
                     </ConnectButton>
-                    <ToggleQRButton styles={{disabled:encryptedMacaroon}}/>
+                    <ToggleQRButtonMacaroon styles={{disabled:encryptedMacaroon}}/>
                 </CardActions>
                 <UnlockWallet />
             </Card>

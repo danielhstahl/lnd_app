@@ -1,10 +1,9 @@
 import {QRInput} from 'components/Utils/QRInput'
 import React from 'react'
 import { shallow, mount } from 'enzyme'
-/*import * as moduleToMock from 'react-qr-reader'
-moduleToMock=props=><div></div>
-jest.setMock('QrReader', moduleToMock)*/
-jest.mock('react-qr-reader', ()=>()=><div></div>)
+
+//jest.mock('react-qr-reader', ()=>()=><div></div>)
+jest.mock('react-qr-scanner', ()=>()=><div></div>)
 
 describe('render', ()=>{
     it('renders without error with showRaw false', ()=>{
