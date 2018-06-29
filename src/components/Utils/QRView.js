@@ -8,7 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Grid from '@material-ui/core/Grid'
 import Button from 'components/CustomButtons/Button'
 import {
-    toggleQRRaw, 
+    setQRRaw, 
     toggleQRShow
 } from 'Actions/qrActions'
 
@@ -29,7 +29,7 @@ export const QRView=({qrRaw, showRaw, toggleRaw, open, handleClose})=>(
     </DialogContent>
     <DialogActions>
         <Button color='primary' onClick={handleClose}>Close</Button>
-        <Button color='primary' onClick={toggleRaw}>{showRaw?'Show QR':'Show Hash'}</Button>
+        <Button color='primary' onClick={toggleRaw(showRaw)}>{showRaw?'Show QR':'Show Hash'}</Button>
     </DialogActions>
 </Dialog>
 )
@@ -46,7 +46,7 @@ const mapStateToProps=({qr})=>({
     open:qr.open
 })
 const mapDispatchToProps=dispatch=>({
-    toggleRaw:toggleQRRaw(dispatch),
+    toggleRaw:setQRRaw(dispatch),
     handleClose:toggleQRShow(dispatch)
 })
 export default connect(

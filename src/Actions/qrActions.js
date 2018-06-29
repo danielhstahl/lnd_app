@@ -1,10 +1,12 @@
-import { TOGGLE_SHOW_RAW, TOGGLE_QR, TOGGLE_SHOW_RAW_MACAROON } from "./actionDefinitions";
+import { SET_SHOW_RAW, TOGGLE_QR, SET_SHOW_RAW_MACAROON } from "./actionDefinitions";
 
-export const toggleQRRaw=dispatch=>()=>dispatch({
-   type:TOGGLE_SHOW_RAW 
+export const setQRRaw=dispatch=>prevVal=>()=>dispatch({
+   type:SET_SHOW_RAW,
+   value:!prevVal
 })
-export const toggleQRRawMacaroon=dispatch=>()=>dispatch({
-   type:TOGGLE_SHOW_RAW_MACAROON
+export const setQRRawMacaroon=dispatch=>prevVal=>()=>dispatch({
+   type:SET_SHOW_RAW_MACAROON,
+   value:!prevVal
 })
 export const toggleQRShow=dispatch=>()=>dispatch({
     type:TOGGLE_QR

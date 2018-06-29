@@ -2,10 +2,12 @@ import React from 'react'
 import 'index.css'
 import { 
     SET_ENCRYPTED_MACAROON,
-    TOGGLE_SHOW_RAW, 
-    TOGGLE_SHOW_RAW_MACAROON
+    SET_SHOW_RAW, 
+    SET_SHOW_RAW_MACAROON
 } from 'Actions/actionDefinitions'
 import Home from 'views/Home'
+import { setQRRawMacaroon} from 'Actions/qrActions'
+import {updateSignIn} from 'Actions/signInActions'
 import { Provider } from 'react-redux'
 import {  mount } from 'enzyme'
 import { createStore } from 'redux'
@@ -18,13 +20,14 @@ import Input from "@material-ui/core/Input"
 import Button from 'components/CustomButtons/Button'
 import {ConnectButton} from 'views/ConnectButton'
 import Snackbar from 'components/Snackbar/Snackbar'
+import {QRInputMacaroon} from 'components/Utils/QRInput'
 import {
     MemoryRouter as Router,
     Route
 } from 'react-router-dom'
 import {delay} from 'utils/componentUtils'
 import { ToggleQRButton, ToggleQRButtonMacaroon } from '../../components/Utils/QRInput'
-
+jest.mock('react-qr-scanner', ()=>()=><div id='video'></div>)
 let store
 const textContent = node => {
     try {
@@ -38,10 +41,12 @@ beforeEach(() => {
     fetch.resetMocks()
     store = createStore(reducer)
     store.dispatch({
-        type:TOGGLE_SHOW_RAW
+        type:SET_SHOW_RAW,
+        value:true
     })
     store.dispatch({
-        type:TOGGLE_SHOW_RAW_MACAROON
+        type:SET_SHOW_RAW_MACAROON,
+        value:true
     })
 })
 describe('render', ()=>{
@@ -252,5 +257,35 @@ describe('integrations', ()=>{
             .then(()=>expect(app.find(Snackbar).props().color).toEqual('warning'))
             .then(()=>expect(app.find(Snackbar).props().message).toEqual('Successful connection, but wallet is locked.'))
            .then(()=>expect(app.find(Snackbar).props().open).toEqual(true))  
+    })
+
+
+    it('correctly closes qr when receives input', ()=>{
+        store.dispatch({
+            type:SET_SHOW_RAW_MACAROON,
+            value:false
+        })
+        const app=mount(
+            <Provider store={store}>
+                <Router>
+                    <Route path='/' component={Home}/>
+                </Router>
+            </Provider>
+        )
+        
+        app.update()
+
+        const video=app.find('#video')
+        expect(video.length).toEqual(1)
+        const qrInput=app.find(QRInputMacaroon)
+        expect(qrInput.length).toEqual(1)
+
+        updateSignIn(store.dispatch)('macaroon')('hello')
+        setQRRawMacaroon(store.dispatch)(false)()
+
+        app.update()
+        const newVideo=app.find('#video')
+        expect(newVideo.length).toEqual(0)
+
     })
 })

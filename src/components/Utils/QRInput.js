@@ -5,7 +5,7 @@ import QrReader from 'react-qr-scanner'
 import {updatePaymentRequest} from 'Actions/paymentActions'
 import {updateSignIn} from 'Actions/signInActions'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
-import {toggleQRRaw, toggleQRRawMacaroon} from 'Actions/qrActions'
+import {setQRRaw, setQRRawMacaroon} from 'Actions/qrActions'
 import Button from 'components/CustomButtons/Button'
 
 const formControlProps={fullWidth:true}
@@ -45,7 +45,7 @@ const mapDispatchToPropsPaymentRequest=dispatch=>({
     onChange:value=>{
         if(value){
             updatePaymentRequest(dispatch)(value)
-            toggleQRRaw(dispatch)()
+            setQRRaw(dispatch)(false)()
         }
     }
 })
@@ -56,7 +56,7 @@ export const QRInputPaymentRequest=connect(
 )(QRInput)
 
 const mapStateToPropsMacaroon=({qr, signin})=>({
-    showRaw:qr.showRaw,
+    showRaw:qr.showRawMacaroon,
     value:signin.macaroon
 })
 
@@ -64,7 +64,7 @@ const mapDispatchToPropsMacaroon=dispatch=>({
     onChange:value=>{
         if(value){
             updateSignIn(dispatch)('macaroon')(value)
-            toggleQRRawMacaroon(dispatch)()
+            setQRRawMacaroon(dispatch)(false)()
         }   
     }
 })
@@ -74,29 +74,25 @@ export const QRInputMacaroon=connect(
     mapDispatchToPropsMacaroon
 )(QRInput)
 
-const mapStateToPropsToggle=({qr})=>({
-    showRaw:qr.showRaw
-})
+
 const mapDispatchToPropsToggle=dispatch=>({
-    toggleRaw:toggleQRRaw(dispatch)
+    toggleRaw:setQRRaw(dispatch)
 })
-const mapStateToPropsToggleMacaroon=({qr})=>({
-    showRaw:qr.showRawMacaroon
-})
+
 const mapDispatchToPropsToggleMacaroon=dispatch=>({
-    toggleRaw:toggleQRRawMacaroon(dispatch)
+    toggleRaw:setQRRawMacaroon(dispatch)
 })
 export const ToggleButton=({toggleRaw, showRaw, styles})=>(
-    <Button color='primary' onClick={toggleRaw} {...styles}>
+    <Button color='primary' onClick={toggleRaw(showRaw)} {...styles}>
         {showRaw?'Scan QR':'Show Raw String'}
     </Button>
 )
 export const ToggleQRButton=connect(
-    mapStateToPropsToggle,
+    mapStateToPropsPaymentRequest,
     mapDispatchToPropsToggle
 )(ToggleButton)
 
 export const ToggleQRButtonMacaroon=connect(
-    mapStateToPropsToggleMacaroon,
+    mapStateToPropsMacaroon,
     mapDispatchToPropsToggleMacaroon
 )(ToggleButton)
