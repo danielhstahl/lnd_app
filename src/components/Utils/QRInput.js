@@ -28,7 +28,6 @@ export const QRInput=({
         onScan={onChange}       
     />
 
-
 QRInput.propTypes={
     showRaw:PropTypes.bool.isRequired,
     value:PropTypes.string,

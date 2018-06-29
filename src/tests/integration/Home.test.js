@@ -3,7 +3,8 @@ import 'index.css'
 import { 
     SET_ENCRYPTED_MACAROON,
     SET_SHOW_RAW, 
-    SET_SHOW_RAW_MACAROON
+    SET_SHOW_RAW_MACAROON, CONNECT_UNLOCKED, 
+    ENTER_PAYMENT_REQUEST
 } from 'Actions/actionDefinitions'
 import Home from 'views/Home'
 import { setQRRawMacaroon} from 'Actions/qrActions'
@@ -16,11 +17,11 @@ import 'typeface-roboto'
 import 'assets/css/material-dashboard-react.css'
 import SignIn from 'views/SignIn'
 import InputLabel from "@material-ui/core/InputLabel"
-import Input from "@material-ui/core/Input"
 import Button from 'components/CustomButtons/Button'
-import {ConnectButton} from 'views/ConnectButton'
+import {ConnectButton, LndButton} from 'views/ConnectButton'
 import Snackbar from 'components/Snackbar/Snackbar'
 import {QRInputMacaroon} from 'components/Utils/QRInput'
+import Input from "@material-ui/core/Input"
 import {
     MemoryRouter as Router,
     Route
@@ -288,4 +289,41 @@ describe('integrations', ()=>{
         expect(newVideo.length).toEqual(0)
 
     })
+    it('has submit button enabled when value exists for payment', ()=>{
+        store.dispatch({
+            type:CONNECT_UNLOCKED
+        })
+        const app=mount(
+            <Provider store={store}>
+                <Router initialEntries={[ '/payments' ]}>
+                    <Route path='/' component={Home}/>
+                </Router>
+            </Provider>
+        )
+        
+        const input1=app.findWhere(val=>textContent(val)==='Payment Request').find(Input)
+        
+        expect(input1.text()).toEqual('')
+        const button1=app.find(LndButton)
+        expect(button1.props().style.disabled).toEqual(true)
+
+        store.dispatch({
+            type:ENTER_PAYMENT_REQUEST,
+            value:'hello'
+        })
+
+        app.update()
+
+        const input2=app.find(Input).find('textarea').findWhere(val=>!val.props()['aria-hidden'])
+        expect(input2.length).toEqual(1)
+        //console.log(input2.html())
+        expect(input2.text()).toEqual('hello')
+
+        const button2=app.find(LndButton)
+        
+        expect(button2.props().style.disabled).toEqual(false)
+
+    })
+
+
 })
