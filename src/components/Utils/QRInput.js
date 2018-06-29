@@ -7,17 +7,9 @@ import {updateSignIn} from 'Actions/signInActions'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
 import {toggleQRRaw, toggleQRRawMacaroon} from 'Actions/qrActions'
 import Button from 'components/CustomButtons/Button'
-import { withStyles } from '@material-ui/core/styles'
-/*const style=theme=>({
-    qr:{
-        [theme.breakpoints.up("md")]:{
-            width:'60%'
-        },    
-        margin: 'auto'
-    }
-})*/
+
 const formControlProps={fullWidth:true}
-export const QRInput=/*withStyles(style)(*/({
+export const QRInput=({
     showRaw, labelText,
     value, onChange, classes
 })=>showRaw?
@@ -31,12 +23,9 @@ export const QRInput=/*withStyles(style)(*/({
         formControlProps={formControlProps}
     />:
     <QrReader 
-        //className={classes.qr} 
-        //maxImageSize={600}
         style={{width:'85%', margin:'auto'}}
         onError={err=>console.log(err)}
-        onScan={onChange}
-        //showViewFinder={false}
+        onScan={onChange}       
     />
 
 
