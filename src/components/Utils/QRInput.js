@@ -7,8 +7,9 @@ import {updateSignIn} from 'Actions/signInActions'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
 import {setQRRaw, setQRRawMacaroon} from 'Actions/qrActions'
 import Button from 'components/CustomButtons/Button'
-
+const qrStyle={width:'85%', margin:'auto'}
 const formControlProps={fullWidth:true}
+const onErr=err=>console.log(err)
 export const QRInput=({
     showRaw, labelText,
     value, onChange, classes
@@ -23,8 +24,8 @@ export const QRInput=({
         formControlProps={formControlProps}
     />:
     <QrReader 
-        style={{width:'85%', margin:'auto'}}
-        onError={err=>console.log(err)}
+        style={qrStyle}
+        onError={onErr}
         onScan={onChange}       
     />
 
