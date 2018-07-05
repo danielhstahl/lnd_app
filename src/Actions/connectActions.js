@@ -87,8 +87,6 @@ const connectFactory=fn=>dispatch=>({password, savedHostname, encryptedMacaroon,
 }
 
 const noConnection='Not Found'
-const successfulUnlock='{"error":"context canceled","code":1}'//for some odd reason, unlocking returns this error even when successful
-
 const hasNoConnection=txt=>txt===noConnection
 const isNotLocked=result=>result.status!=='locked'
 
