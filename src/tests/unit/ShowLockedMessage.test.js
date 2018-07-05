@@ -8,15 +8,15 @@ import { createStore } from 'redux'
 import StandardLightningError from 'components/Utils/StandardLightningError'
 const store = createStore(reducer)
 import {
-    CONNECTION_UNLOCKED, 
-} from 'Reducers/connectReducer'
+    CONNECT_UNLOCKED
+} from 'Actions/actionDefinitions'
 
 describe('render', ()=>{
     it('renders without error when connection unlocked', ()=>{
         mount(
             <Provider store={store}>
                 <MemoryRouter>
-                    <ShowLockedMessage connectionStatus={CONNECTION_UNLOCKED}>
+                    <ShowLockedMessage connectStatus={CONNECT_UNLOCKED}>
                         hello
                     </ShowLockedMessage>
                 </MemoryRouter>
@@ -27,7 +27,7 @@ describe('render', ()=>{
         mount(
             <Provider store={store}>
                 <MemoryRouter>
-                    <ShowLockedMessage connectionStatus='something'>
+                    <ShowLockedMessage connectStatus='something'>
                         hello
                     </ShowLockedMessage>
                 </MemoryRouter>
@@ -41,7 +41,7 @@ describe('functionality', ()=>{
         const lockedMessage=mount(
             <Provider store={store}>
                 <MemoryRouter>
-                    <ShowLockedMessage connectionStatus={CONNECTION_UNLOCKED}>
+                    <ShowLockedMessage connectStatus={CONNECT_UNLOCKED}>
                         <span>hello</span>
                     </ShowLockedMessage>
                 </MemoryRouter>
@@ -53,7 +53,7 @@ describe('functionality', ()=>{
         const lockedMessage=mount(
             <Provider store={store}>
                 <MemoryRouter>
-                    <ShowLockedMessage connectionStatus='something'>
+                    <ShowLockedMessage connectStatus='something'>
                         <span>hello</span>
                     </ShowLockedMessage>
                 </MemoryRouter>
