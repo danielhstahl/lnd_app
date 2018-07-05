@@ -24,8 +24,6 @@ const variantIcon = {
 
 export const ConnectionAlert=({justUpdated, messageStatus})=>{
     const variant=messageStatus.status
-    console.log(justUpdated)
-    console.log(messageStatus)
     return (
         <Snackbar 
             color={variant}  

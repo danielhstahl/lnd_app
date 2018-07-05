@@ -172,7 +172,7 @@ describe('integrations', ()=>{
 
     })
     it('correctly shows errors when password and macaroon are entered but does not connect', ()=>{
-        fetch.mockResponses(['something unexpected '], ['something unexpected ']) //both results give unexpected responses
+        fetch.mockReject(new Error('error happened'))
         const app=mount(
             <Provider store={store}>
                 <Router>
@@ -212,8 +212,8 @@ describe('integrations', ()=>{
         return delay(50)
             .then(()=>app.update())
             .then(()=>expect(app.find(Snackbar).props().color).toEqual('danger'))
-            .then(()=>expect(app.find(Snackbar).props().message).toEqual('Connection could not be established!'))
-           .then(()=>expect(app.find(Snackbar).props().open).toEqual(true))  
+            .then(()=>expect(app.find(Snackbar).props().message).toEqual('error happened'))
+            .then(()=>expect(app.find(Snackbar).props().open).toEqual(true))  
     })
     it('correctly shows warnings when password and macaroon are entered but does not connect due to locked', ()=>{
         fetch.mockResponses(['Not Found '], ['Not Found ']) //both results are not found
@@ -256,7 +256,7 @@ describe('integrations', ()=>{
         return delay(50)
             .then(()=>app.update())
             .then(()=>expect(app.find(Snackbar).props().color).toEqual('warning'))
-            .then(()=>expect(app.find(Snackbar).props().message).toEqual('Successful connection, but wallet is locked.'))
+            .then(()=>expect(app.find(Snackbar).props().message).toEqual('Connection succeeded, but wallet is locked'))
            .then(()=>expect(app.find(Snackbar).props().open).toEqual(true))  
     })
 

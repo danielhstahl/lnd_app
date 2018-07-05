@@ -8,21 +8,29 @@ import {
 } from 'Reducers/connectReducer'
 
 describe('render', ()=>{
+    const messageStatus={
+        status:'success',
+        message:'hello'
+    }
     it('renders without error with justUpdated=false', ()=>{
-        mount(<ConnectionAlert justUpdated={false} message='hello'/>)
+        mount(<ConnectionAlert justUpdated={false} messageStatus={messageStatus}/>)
     })
     it('renders without error with justUpdated=true', ()=>{
-        mount(<ConnectionAlert justUpdated={true} message='hello'/>)
+        mount(<ConnectionAlert justUpdated={true} messageStatus={messageStatus}/>)
     })
     it('renders without error with justUpdated=true and a correct message', ()=>{
-        mount(<ConnectionAlert justUpdated={true} message={CONNECTION_BUT_LOCKED}/>)
+        mount(<ConnectionAlert justUpdated={true} messageStatus={messageStatus}/>)
     })
 })
 
 describe('functionality', ()=>{
+    const messageStatus={
+        status:'success',
+        message:'hello'
+    }
     it('has correct message when success', ()=>{
-        const connectionAlert=mount(<ConnectionAlert justUpdated={true} message={CONNECTION_UNLOCKED}/>)
+        const connectionAlert=mount(<ConnectionAlert justUpdated={true} messageStatus={messageStatus}/>)
         console.log(connectionAlert.find('span').text())
-        expect(connectionAlert.find('span').text()).toEqual('Successful connection!')
+        expect(connectionAlert.find('span').text()).toEqual('hello')
     })
 })

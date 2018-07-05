@@ -90,14 +90,15 @@ const noConnection='Not Found'
 const successfulUnlock='{"error":"context canceled","code":1}'//for some odd reason, unlocking returns this error even when successful
 
 const hasNoConnection=txt=>txt===noConnection
-const hasConnectionAndAlreadyUnlocked=txt=>txt!==noConnection&&txt!==successfulUnlock
-const checkOtherError=txt=>{
-    const result=JSON.parse(txt)
+const isNotLocked=result=>result.status!=='locked'
+
+const checkOtherError=result=>{
     if(result.error){
         throw new Error(result.error)
     }
-    return txt
+    return result
 }
+
 const dispatchLockedIfNotFound=dispatch=>txt=>{
     if(hasNoConnection(txt)){
         dispatch({
@@ -107,11 +108,12 @@ const dispatchLockedIfNotFound=dispatch=>txt=>{
             type:MESSAGE_WARNING,
             value:'Connection succeeded, but wallet is locked'
         })
+        return JSON.stringify({status:'locked'})
     }
     return txt
 }
-const dispatchUnlockedIfNotUnlocking=dispatch=>txt=>{
-    if(hasConnectionAndAlreadyUnlocked(txt)){ 
+const dispatchUnlockedIfNotLocked=dispatch=>result=>{
+    if(isNotLocked(result)){ 
         dispatch({
             type:CONNECT_UNLOCKED
         })
@@ -120,30 +122,31 @@ const dispatchUnlockedIfNotUnlocking=dispatch=>txt=>{
             value:'Successful connection!'
         })
     }
-    return txt
+    return result
 }
-const dispatchResultIfType=(dispatch, type)=>txt=>{
-    if((!hasNoConnection(txt))&&type){
+
+const dispatchResultIfType=(dispatch, type)=>result=>{
+    if(type&&isNotLocked(result)){
         dispatch({
             type,
-            value:JSON.parse(txt)
+            value:result
         })
     }
-    return txt
+    return result
 }
 
 export const checkWhetherFound=(dispatch, type)=>res=>Promise.resolve(res.text())
     .then(trimStr)
     .then(dispatchLockedIfNotFound(dispatch))
-    .then(dispatchUnlockedIfNotUnlocking(dispatch))
+    .then(JSON.parse)
+    .then(dispatchUnlockedIfNotLocked(dispatch))
     .then(checkOtherError)
     .then(dispatchResultIfType(dispatch, type))
 
 export const checkErrorOnPost=res=>Promise.resolve(res.text())
     .then(trimStr)
+    .then(JSON.parse)
     .then(checkOtherError)
-
-
 
 const getBalanceLocal=dispatch=>({macaroon, hostname})=>{
     const req=getLightningRequest({
@@ -164,6 +167,7 @@ const checkConnectionLocal=dispatch=>({macaroon, hostname})=>{
     getBalanceLocal(dispatch)({macaroon, hostname})
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_INFO))
+        .then(generateNotify(dispatch))
         .catch(err=>{
             dispatchWarning(dispatch)(err)
             connectionFailed(dispatch)()
