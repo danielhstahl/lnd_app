@@ -6,13 +6,16 @@ import CustomInput from "components/CustomInput/CustomInput.jsx"
 import {UnlockWalletButton} from './ConnectButton'
 import { connect } from 'react-redux' 
 import PropTypes from 'prop-types'
-import {CONNECTION_BUT_LOCKED} from '../Reducers/connectReducer'
 import {updateSignIn} from '../Actions/signInActions'
 import Grid from '@material-ui/core/Grid'
+import {
+    CONNECT_UNLOCKED
+} from 'Actions/actionDefinitions'
+
 
 const formControlProps={fullWidth:true}
 const style={color:"primary"}
-const UnlockWallet=({ walletPassword, updateSignIn, connectionStatus})=>CONNECTION_BUT_LOCKED===connectionStatus?
+const UnlockWallet=({ walletPassword, updateSignIn, connectStatus})=>CONNECT_UNLOCKED===connectStatus?
     [
         <CardBody key='walletbody'>
             <Grid container>
@@ -46,7 +49,7 @@ UnlockWallet.propTypes={
 }
 
 const mapStateToProps=({signin, connection})=>({
-    connectionStatus:connection.connectionStatus,
+    connectStatus:connection.connectStatus,
     walletPassword:signin.walletPassword
 })
 const mapDispatchToProps=dispatch=>({

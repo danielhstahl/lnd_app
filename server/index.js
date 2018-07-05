@@ -3,7 +3,7 @@ const fs=require('fs')
 const cors = require('cors')
 const app=express()
 const https=require('https')
-
+const request=require('request')
 const local_port=process.env.LOCAL_PORT||8081
 const lightning_host=process.env.HOST_NAME||'localhost'
 const lightning_port=process.env.HOST_PORT||8080
@@ -25,35 +25,24 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 const sendItemToServer=(req, res)=>{
     const headerKey='grpc-metadata-macaroon'
-    const getHeader=req.headers[headerKey]
+    const header=req.headers[headerKey]
     const options={
-        path:req.path,
-        hostname:lightning_host,
-        port:lightning_port,
-        headers:{[headerKey]:getHeader},
-        body:req.body,
+        url:`https://${lightning_host}:${lightning_port}${req.path}`,
         method:req.method,
+        headers:{[headerKey]:header},
+        body:JSON.stringify(req.body),
         rejectUnauthorized: false,
     }
-    let result=''
-    const serverRequest=https.request(options, serverResult=>{
-        serverResult.on('data', d => {
-            result+=d
-        })
-        serverResult.on('end', ()=>{
-            res.send(result)
-        })
+    request(options, (error, response, body) =>{
+        if(error){
+            console.log(error)
+            res.send(error)
+        }
+        else{
+            //console.log(body)
+            res.send(body)
+        }
     })
-    serverRequest.on('error', err=>{
-        console.log(err)
-    })
-    serverRequest.end()
 }
 app.all('/v1/*', sendItemToServer)
 
-//app.set('port', port)
-/*
-app.listen(app.get('port'), () => {
-    //console.log('Node app is running on port', port)
-    console.log('Proxying to', lightning_host, ':', lightning_port)
-})*/

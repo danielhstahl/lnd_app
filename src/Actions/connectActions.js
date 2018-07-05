@@ -3,6 +3,9 @@ import {
     CONNECT_FAILED,
     CONNECT_LOCKED,
     CONNECT_UNLOCKED,
+    MESSAGE_DANGER,
+    MESSAGE_SUCCESS,
+    MESSAGE_WARNING,
     GET_INFO,
     GET_BALANCE,
     GET_TRANSACTIONS,
@@ -18,7 +21,8 @@ const formUrl=(hostname, ...extensions)=>`https://${hostname}/v1/${extensions.jo
 
 const getLightningRequest=({macaroon, method, endpoint, ...rest})=>{
     const headers = new Headers({
-        "Grpc-Metadata-macaroon": macaroon
+        "Grpc-Metadata-macaroon": macaroon,
+        'Content-Type': 'application/json'
     })
     const requestData={ 
         method,
@@ -33,10 +37,26 @@ const getMacaroon=({password, encryptedMacaroon})=>{
     return decipher.update(encryptedMacaroon, 'hex', 'utf8')+ decipher.final('utf8')
 }
 const notifyTime=4000
-const dispatchError=dispatch=>err=>{
-    console.log(err)
+const generateNotify=dispatch=>()=>{
+    dispatch({
+        type:JUST_UPDATED,
+        value:true
+    })
+    setTimeout(()=>dispatch({
+            type:JUST_UPDATED,
+            value:false
+        }),
+        notifyTime
+    )
+}
+const connectionFailed=dispatch=>()=>dispatch({
+    type:CONNECT_FAILED
+})
+const dispatchWarning=dispatch=>err=>{
+    generateNotify(dispatch)()
     return dispatch({
-        type:CONNECT_FAILED
+        type:MESSAGE_DANGER,
+        value:err.message
     })
 }
 const connectFactory=fn=>dispatch=>({password, savedHostname, encryptedMacaroon, ...rest})=>()=>{
@@ -71,11 +91,21 @@ const successfulUnlock='{"error":"context canceled","code":1}'//for some odd rea
 
 const hasNoConnection=txt=>txt===noConnection
 const hasConnectionAndAlreadyUnlocked=txt=>txt!==noConnection&&txt!==successfulUnlock
-
+const checkOtherError=txt=>{
+    const result=JSON.parse(txt)
+    if(result.error){
+        throw new Error(result.error)
+    }
+    return txt
+}
 const dispatchLockedIfNotFound=dispatch=>txt=>{
     if(hasNoConnection(txt)){
         dispatch({
             type:CONNECT_LOCKED
+        })
+        dispatch({
+            type:MESSAGE_WARNING,
+            value:'Connection succeeded, but wallet is locked'
         })
     }
     return txt
@@ -84,6 +114,10 @@ const dispatchUnlockedIfNotUnlocking=dispatch=>txt=>{
     if(hasConnectionAndAlreadyUnlocked(txt)){ 
         dispatch({
             type:CONNECT_UNLOCKED
+        })
+        dispatch({
+            type:MESSAGE_SUCCESS,
+            value:'Successful connection!'
         })
     }
     return txt
@@ -102,21 +136,15 @@ export const checkWhetherFound=(dispatch, type)=>res=>Promise.resolve(res.text()
     .then(trimStr)
     .then(dispatchLockedIfNotFound(dispatch))
     .then(dispatchUnlockedIfNotUnlocking(dispatch))
+    .then(checkOtherError)
     .then(dispatchResultIfType(dispatch, type))
-    .catch(dispatchError(dispatch))
 
-const generateNotify=dispatch=>()=>{
-    dispatch({
-        type:JUST_UPDATED,
-        value:true
-    })
-    setTimeout(()=>dispatch({
-            type:JUST_UPDATED,
-            value:false
-        }),
-        notifyTime
-    )
-}
+export const checkErrorOnPost=res=>Promise.resolve(res.text())
+    .then(trimStr)
+    .then(checkOtherError)
+
+
+
 const getBalanceLocal=dispatch=>({macaroon, hostname})=>{
     const req=getLightningRequest({
         macaroon, 
@@ -136,7 +164,10 @@ const checkConnectionLocal=dispatch=>({macaroon, hostname})=>{
     getBalanceLocal(dispatch)({macaroon, hostname})
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_INFO))
-        .then(generateNotify(dispatch))
+        .catch(err=>{
+            dispatchWarning(dispatch)(err)
+            connectionFailed(dispatch)()
+        })
 }
 
 const unlockWalletLocal=dispatch=>({macaroon, walletPassword, hostname})=>{
@@ -148,6 +179,7 @@ const unlockWalletLocal=dispatch=>({macaroon, walletPassword, hostname})=>{
     })
     return fetch(req) //oddly enough, returns {"error":"context canceled","code":1}
         .then(checkWhetherFound(dispatch)) //successfully unlocks
+        .catch(dispatchWarning(dispatch))
         .then(()=>delay(20000)) //apparently it takes a long time to unlock :|
         .then(()=>checkConnectionLocal(dispatch)({macaroon})) 
 }
@@ -160,6 +192,7 @@ const getTransactionsLocal=dispatch=>({macaroon, hostname})=>{
     })
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_TRANSACTIONS))
+        .catch(dispatchWarning(dispatch))
 }
 
 const getInvoicesLocal=dispatch=>({macaroon, hostname})=>{
@@ -170,6 +203,7 @@ const getInvoicesLocal=dispatch=>({macaroon, hostname})=>{
     })
     return fetch(req)
         .then(checkWhetherFound(dispatch, GET_INVOICES))
+        .catch(dispatchWarning(dispatch))
 }
 
 const createInvoiceLocal=dispatch=>({macaroon, hostname, amount, memo})=>{
@@ -180,7 +214,10 @@ const createInvoiceLocal=dispatch=>({macaroon, hostname, amount, memo})=>{
         body:JSON.stringify({value:convertBTCToSatoshi(amount), memo})
     })
     return fetch(req)
+        .then(checkErrorOnPost)
         .then(()=>getInvoicesLocal(dispatch)({macaroon, hostname}))
+        .catch(dispatchWarning(dispatch))
+        
 }
 const sendPaymentLocal=dispatch=>({macaroon, hostname, paymentRequest})=>{
     const req=getLightningRequest({
@@ -190,7 +227,10 @@ const sendPaymentLocal=dispatch=>({macaroon, hostname, paymentRequest})=>{
         body:JSON.stringify({payment_request:paymentRequest})
     })
     return fetch(req)
-        .then(()=>getInvoicesLocal(dispatch)({macaroon, hostname}))
+        .then(checkErrorOnPost)
+        //.then(()=>getInvoicesLocal(dispatch)({macaroon, hostname}))
+        .catch(dispatchWarning(dispatch))
+        
 }
 
 export const checkConnection=connectFactory(checkConnectionLocal)

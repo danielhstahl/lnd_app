@@ -1,21 +1,7 @@
-import {
-    CONNECTION_BUT_LOCKED, 
-    CONNECTION_UNLOCKED, 
-    NO_CONNECTION
-} from '../Reducers/connectReducer'
-
-export const filterMessageVariant=message=>{
-    switch(message){
-        case CONNECTION_BUT_LOCKED:
-            return 'warning' 
-        case CONNECTION_UNLOCKED:
-            return 'success' 
-        case NO_CONNECTION:
-            return 'danger'
-        default:
-            return 'info'
-    }
-}
+export const MUI_SUCCESS='success'
+export const MUI_WARNING='warning'
+export const MUI_DANGER='danger'
+export const MUI_INFO='info'
 
 export const delay=ms=>new Promise((resolve, _)=>{
     setTimeout(()=>resolve(), ms)

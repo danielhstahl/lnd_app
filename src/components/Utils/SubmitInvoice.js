@@ -8,7 +8,7 @@ const styles={color:'primary'}
 export const SubmitInvoice=({amount, memo, updateInvoice})=>[
     <CustomInput
         inputProps={{
-            value:amount, 
+            value:amount||'', 
             onChange:updateInvoice('amount')
         }}
         key='invoiceamt'
@@ -18,7 +18,7 @@ export const SubmitInvoice=({amount, memo, updateInvoice})=>[
     />,
     <CustomInput
         inputProps={{
-            value:memo, 
+            value:memo||'', 
             onChange:updateInvoice('memo')
         }}
         key='memo'

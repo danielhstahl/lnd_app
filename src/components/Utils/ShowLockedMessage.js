@@ -1,18 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux' 
-import {CONNECTION_UNLOCKED} from 'Reducers/connectReducer'
 import StandardLightningError from './StandardLightningError'
 import PropTypes from 'prop-types'
-
-export const ShowLockedMessage=({connectionStatus, children})=>connectionStatus===CONNECTION_UNLOCKED?children:<StandardLightningError/>
+import {
+    CONNECT_UNLOCKED
+} from 'Actions/actionDefinitions'
+export const ShowLockedMessage=({connectStatus, children})=>connectStatus===CONNECT_UNLOCKED?children:<StandardLightningError/>
 
 ShowLockedMessage.propTypes={
-    connectionStatus:PropTypes.string.isRequired,
+    connectStatus:PropTypes.string.isRequired,
     children:PropTypes.node.isRequired
 }
 
 const mapStateToProps=({connection})=>({
-    connectionStatus:connection.connectionStatus
+    connectStatus:connection.connectStatus
 })
 
 export default connect(

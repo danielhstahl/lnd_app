@@ -6,23 +6,28 @@ import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import WarningIcon from '@material-ui/icons/Warning'
-import {filterMessageVariant} from '../utils/componentUtils'
 
 import { withStyles } from '@material-ui/core/styles'
 import sidebarStyle from "assets/jss/material-dashboard-react/components/sidebarStyle.jsx"
 import snackbarContentStyle from "assets/jss/material-dashboard-react/components/snackbarContentStyle.jsx"
 import {
-    CONNECTION_BUT_LOCKED, 
-    CONNECTION_UNLOCKED, 
-    NO_CONNECTION,
-    NO_ATTEMPT
-} from '../Reducers/connectReducer'
+    CONNECT_FAILED,
+    CONNECT_UNLOCKED,
+    CONNECT_LOCKED,
+    CONNECT_NO_ATTEMPT
+} from 'Actions/actionDefinitions'
+import {
+    MUI_SUCCESS, 
+    MUI_WARNING, 
+    MUI_DANGER,
+    MUI_INFO
+} from 'utils/componentUtils'
 import {convertSatoshiToBTC} from 'utils/btcUtils'
 const variantIcon = {
-    success: CheckCircleIcon,
-    warning: WarningIcon,
-    danger: ErrorIcon,
-    info: InfoIcon,
+    [MUI_SUCCESS]: CheckCircleIcon,
+    [MUI_WARNING]: WarningIcon,
+    [MUI_DANGER]: ErrorIcon,
+    [MUI_INFO]: InfoIcon,
 }
 
 const stylesSnackContent = theme => ({
@@ -30,46 +35,60 @@ const stylesSnackContent = theme => ({
     ...sidebarStyle(theme)
 })
 
-const filterInfo=(message, info)=>{
-    switch(message){
-        case CONNECTION_UNLOCKED:
+const filterInfo=(connectStatus, info)=>{
+    switch(connectStatus){
+        case CONNECT_UNLOCKED:
             return <span>
                     <br/>
                     Peers: {info.num_peers}<br/>
                     Network: {info.testnet?"TestNet":"MainNet"}<br/>
                     Block Height: {info.block_height}
                 </span>
-        case CONNECTION_BUT_LOCKED:
+        case CONNECT_LOCKED:
             return 'Wallet is locked'
-        case NO_CONNECTION:
+        case CONNECT_FAILED:
             return 'Could not connect'
         default:
             return ''
     }
 }
-const filterStatus=(message, info)=>{
-    switch(message){
-        case NO_ATTEMPT:
+const filterStatus=(connectStatus, info)=>{
+    switch(connectStatus){
+        case CONNECT_NO_ATTEMPT:
             return 'Disconnected'
         default:
             return info.synced_to_chain?"Synced":"Syncing..."
     }
 }
-export const ChainStats=({message, info, classes})=>{
-    const variant =filterMessageVariant(message)
+
+const convertStatusToIcon=status=>{
+    switch(status){
+        case CONNECT_UNLOCKED:
+            return MUI_SUCCESS
+        case CONNECT_LOCKED:
+            return MUI_WARNING
+        case CONNECT_FAILED:
+            return MUI_DANGER
+        default:
+            return MUI_INFO
+    }
+}
+
+export const ChainStats=({connectStatus, info, classes})=>{
+    const variant=convertStatusToIcon(connectStatus)
     const Icon = variantIcon[variant]
     return (
     <div>
-        Status: {filterStatus(message, info)}
+        Status: {filterStatus(connectStatus, info)}
         <div className={classNames(classes.logoImage, classes[variant+'Icon'])}>
             <Icon className={classes.img}/>
         </div>
-        {filterInfo(message, info)}
+        {filterInfo(connectStatus, info)}
     </div>
     )
 }
 ChainStats.propTypes={
-    message:PropTypes.string.isRequired,
+    connectStatus:PropTypes.string.isRequired,
     info:PropTypes.shape({
         num_peers:PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         testnet:PropTypes.bool,
@@ -81,7 +100,7 @@ ChainStats.propTypes={
     }).isRequired
 }
 const mapStateToPropsChain=({connection, network})=>({
-    message:connection.connectionStatus,
+    connectStatus:connection.connectStatus,
     info:network.generalInfo
 })
 const ChainStatsConnected=connect(

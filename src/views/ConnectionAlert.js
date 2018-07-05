@@ -4,57 +4,49 @@ import PropTypes from 'prop-types'
 import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import {filterMessageVariant} from '../utils/componentUtils'
 import Snackbar from 'components/Snackbar/Snackbar'
 import WarningIcon from '@material-ui/icons/Warning'
 import {
-    CONNECTION_BUT_LOCKED, 
-    CONNECTION_UNLOCKED, 
-    NO_CONNECTION
-} from '../Reducers/connectReducer'
+    MUI_SUCCESS, 
+    MUI_WARNING, 
+    MUI_DANGER,
+    MUI_INFO
+} from 'utils/componentUtils'
 
 
 const variantIcon = {
-  success: CheckCircleIcon,
-  warning: WarningIcon,
-  danger: ErrorIcon,
-  info: InfoIcon,
+  [MUI_SUCCESS]: CheckCircleIcon,
+  [MUI_WARNING]: WarningIcon,
+  [MUI_DANGER]: ErrorIcon,
+  [MUI_INFO]: InfoIcon,
 }
 
 
-const filterMessageText=message=>{
-    switch(message){
-        case CONNECTION_BUT_LOCKED:
-            return 'Successful connection, but wallet is locked.' 
-        case CONNECTION_UNLOCKED:
-            return 'Successful connection!' 
-        case NO_CONNECTION:
-            return 'Connection could not be established!'
-        default:
-            return `Something happened.  But I don't know what`
-    }
-}
-
-export const ConnectionAlert=({justUpdated, message})=>{
-    const variant=filterMessageVariant(message)
+export const ConnectionAlert=({justUpdated, messageStatus})=>{
+    const variant=messageStatus.status
+    console.log(justUpdated)
+    console.log(messageStatus)
     return (
         <Snackbar 
             color={variant}  
             open={justUpdated}
             place='bl'
             icon={variantIcon[variant]}
-            message={filterMessageText(message)}
+            message={messageStatus.message}
         />
     )
 }
 ConnectionAlert.propTypes={
     justUpdated:PropTypes.bool.isRequired,
-    message:PropTypes.string.isRequired
+    messageStatus:PropTypes.shape({
+        status:PropTypes.string.isRequired,
+        message:PropTypes.string.isRequired
+    }).isRequired
 }
 
 const mapStateToProps=({connection})=>({
     justUpdated:connection.justUpdated,
-    message:connection.connectionStatus
+    messageStatus:connection.messageStatus
 })
 
 export default connect(
