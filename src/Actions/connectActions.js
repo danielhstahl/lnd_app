@@ -89,6 +89,7 @@ const connectFactory=fn=>dispatch=>({password, savedHostname, encryptedMacaroon,
 const noConnection='Not Found'
 const hasNoConnection=txt=>txt===noConnection
 const isNotLocked=result=>result.status!=='locked'
+const justUnlocked=result=>result.error==='context canceled'//oddly enough, returns {"error":"context canceled","code":1} when unlocks
 
 const checkOtherError=result=>{
     if(result.error){
@@ -111,7 +112,7 @@ const dispatchLockedIfNotFound=dispatch=>txt=>{
     return txt
 }
 const dispatchUnlockedIfNotLocked=dispatch=>result=>{
-    if(isNotLocked(result)){ 
+    if(isNotLocked(result)||justUnlocked(result)){ 
         dispatch({
             type:CONNECT_UNLOCKED
         })
@@ -120,7 +121,12 @@ const dispatchUnlockedIfNotLocked=dispatch=>result=>{
             value:'Successful connection!'
         })
     }
-    return result
+    if(justUnlocked(result)){
+        return {}
+    }
+    else{
+        return result
+    }
 }
 
 const dispatchResultIfType=(dispatch, type)=>result=>{
@@ -180,10 +186,12 @@ const unlockWalletLocal=dispatch=>({macaroon, walletPassword, hostname})=>{
         body:JSON.stringify({wallet_password:btoa(walletPassword)})
     })
     return fetch(req) //oddly enough, returns {"error":"context canceled","code":1}
-        .then(checkWhetherFound(dispatch)) //successfully unlocks
-        .catch(dispatchWarning(dispatch))
-        .then(()=>delay(20000)) //apparently it takes a long time to unlock :|
-        .then(()=>checkConnectionLocal(dispatch)({macaroon})) 
+        .catch(err=>{
+            dispatchWarning(dispatch)(err)
+            connectionFailed(dispatch)()
+        })
+        .then(()=>delay(30000)) //apparently it takes a long time to unlock :|
+        .then(()=>checkConnectionLocal(dispatch)({macaroon, hostname})) 
 }
 
 const getTransactionsLocal=dispatch=>({macaroon, hostname})=>{

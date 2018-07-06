@@ -9,13 +9,13 @@ import PropTypes from 'prop-types'
 import {updateSignIn} from '../Actions/signInActions'
 import Grid from '@material-ui/core/Grid'
 import {
-    CONNECT_UNLOCKED
+    CONNECT_LOCKED
 } from 'Actions/actionDefinitions'
 
 
 const formControlProps={fullWidth:true}
 const style={color:"primary"}
-const UnlockWallet=({ walletPassword, updateSignIn, connectStatus})=>CONNECT_UNLOCKED===connectStatus?
+const UnlockWallet=({ walletPassword, updateSignIn, connectStatus})=>CONNECT_LOCKED===connectStatus?
     [
         <CardBody key='walletbody'>
             <Grid container>
