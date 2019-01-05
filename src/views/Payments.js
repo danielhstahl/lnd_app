@@ -47,7 +47,6 @@ export const Payments=withStyles(styles)(({
     </ShowLockedMessage>
 ))
 Payments.propTypes={
-    classes:PropTypes.object.isRequired,
     paymentRequest:PropTypes.string.isRequired,
     updatePaymentRequest:PropTypes.func.isRequired,
 }

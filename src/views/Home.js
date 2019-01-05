@@ -57,11 +57,6 @@ export const Home=withStyles(homeStyle)(({toggleDrawer, drawer, classes, locatio
 Home.propTypes={
     toggleDrawer:PropTypes.func.isRequired,
     drawer:PropTypes.bool.isRequired,
-    classes:PropTypes.shape({
-        mainPanel:PropTypes.string,
-        content:PropTypes.string,
-        container:PropTypes.string
-    }).isRequired,
     location:PropTypes.shape({
         pathname:PropTypes.string.isRequired
     }).isRequired

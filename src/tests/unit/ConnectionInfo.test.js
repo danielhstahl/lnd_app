@@ -1,10 +1,9 @@
 import {ChainStats} from 'views/ConnectionInfo'
 import React from 'react'
-import { shallow, mount } from 'enzyme'
+import {  mount } from 'enzyme'
 
 import {
     CONNECT_UNLOCKED,
-    CONNECT_LOCKED,
     CONNECT_NO_ATTEMPT
 } from 'Actions/actionDefinitions'
 
@@ -16,15 +15,23 @@ describe('render', ()=>{
         block_height:300
     }
     const classes={
-        logoImage:{},
-        infoIcon:{},
-        img:{}
+        logoImage:"some image",
+        infoIcon:"some icon",
+        img:"some class"
     }
     it('renders without error', ()=>{
-        mount(<ChainStats info={info} message='hello' classes={classes}/>)
+        mount(<ChainStats 
+            info={info} 
+            classes={classes}
+            connectStatus='Wallet is locked'
+        />)
     })
     it('renders without error  a correct message', ()=>{
-        mount(<ChainStats info={info}  classes={classes} message={CONNECT_NO_ATTEMPT}/>)
+        mount(<ChainStats 
+            info={info}  
+            classes={classes} 
+            connectStatus={CONNECT_NO_ATTEMPT}
+        />)
     })
 })
 
@@ -36,9 +43,9 @@ describe('functionality', ()=>{
         block_height:300
     }
     const classes={
-        logoImage:{},
-        infoIcon:{},
-        img:{}
+        logoImage:"some image",
+        infoIcon:"some icon",
+        img:"some class"
     }
     it('has correct message when success', ()=>{
         const chainStats=mount(<ChainStats info={info}  classes={classes} connectStatus={CONNECT_UNLOCKED}/>)

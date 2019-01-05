@@ -103,7 +103,7 @@ const SignIn=withStyles(styles)(({
                     >
                         {encryptedMacaroon?'Connect':'Save and Connect'}
                     </ConnectButton>
-                    <ToggleQRButtonMacaroon styles={{disabled:encryptedMacaroon}}/>
+                    <ToggleQRButtonMacaroon styles={{disabled:Boolean(encryptedMacaroon)}}/>
                 </CardActions>
                 <UnlockWallet />
             </Card>
@@ -118,10 +118,6 @@ SignIn.propTypes={
     encryptedMacaroon:PropTypes.string,
     savedHostname:PropTypes.string,
     removeMacaroon:PropTypes.func.isRequired,
-    classes:PropTypes.shape({
-        cardTitleWhite:PropTypes.string.isRequired,
-        cardCategoryWhite:PropTypes.string.isRequired
-    }).isRequired
 }
 
 const mapStateToProps=({signin, encryptedMacaroon, passwordError, savedHostname})=>({

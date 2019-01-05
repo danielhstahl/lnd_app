@@ -60,10 +60,6 @@ Transactions.propTypes={
     }),
     encryptedMacaroon:PropTypes.string,
     password:PropTypes.string,
-    classes:PropTypes.shape({
-        cardTitleWhite:PropTypes.string.isRequired,
-        cardCategoryWhite:PropTypes.string.isRequired
-    }).isRequired,
     getTransactions:PropTypes.func.isRequired
 }
 

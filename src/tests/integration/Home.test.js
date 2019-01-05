@@ -27,7 +27,7 @@ import {
     Route
 } from 'react-router-dom'
 import {delay} from 'utils/componentUtils'
-import { ToggleQRButton, ToggleQRButtonMacaroon } from '../../components/Utils/QRInput'
+import {  ToggleQRButtonMacaroon } from '../../components/Utils/QRInput'
 jest.mock('react-qr-scanner', ()=>()=><div id='video'></div>)
 let store
 const textContent = node => {

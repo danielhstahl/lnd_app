@@ -71,7 +71,6 @@ PendingInvoices.propTypes={
     }).isRequired,
     encryptedMacaroon:PropTypes.string,
     password:PropTypes.string,
-    classes:PropTypes.object.isRequired,
     getInvoices:PropTypes.func.isRequired,
     showQR:PropTypes.func.isRequired,
     paymentRequest:PropTypes.string

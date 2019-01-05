@@ -96,7 +96,8 @@ ChainStats.propTypes={
         synced_to_chain:PropTypes.bool
     }).isRequired,
     classes:PropTypes.shape({
-        logoImage:PropTypes.string
+        logoImage:PropTypes.string,
+        img:PropTypes.string
     }).isRequired
 }
 const mapStateToPropsChain=({connection, network})=>({
