@@ -82,7 +82,9 @@ describe('integrations', ()=>{
             </Provider>
         )
         app.update()
-        expect(app.find('p').findWhere(v=>textContent(v)==='Not connected to the Lightning Network!  Go to settings to connect to update connection settings.').length).toEqual(1)
+        expect(app.find('p').findWhere(
+            v=>textContent(v)==='Not connected to the Lightning Network!  Go to settings to connect to update connection settings.'
+        ).length).toBeGreaterThan(0)
     })
     it('correctly provides warning when not connected and in invoices', ()=>{
         const app=mount(
@@ -93,7 +95,9 @@ describe('integrations', ()=>{
             </Provider>
         )
         app.update()
-        expect(app.find('p').findWhere(v=>textContent(v)==='Not connected to the Lightning Network!  Go to settings to connect to update connection settings.').length).toEqual(1)
+        expect(app.find('p').findWhere(
+            v=>textContent(v)==='Not connected to the Lightning Network!  Go to settings to connect to update connection settings.'
+        ).length).toBeGreaterThan(0)
     })
     it('correctly provides warning when not connected and in payments', ()=>{
         const app=mount(
@@ -104,7 +108,9 @@ describe('integrations', ()=>{
             </Provider>
         )
         app.update()
-        expect(app.find('p').findWhere(v=>textContent(v)==='Not connected to the Lightning Network!  Go to settings to connect to update connection settings.').length).toEqual(1)
+        expect(app.find('p').findWhere(
+            v=>textContent(v)==='Not connected to the Lightning Network!  Go to settings to connect to update connection settings.'
+        ).length).toBeGreaterThan(0)
     })
     it('correctly requests macaroon and password if macaroon is not in localstorage', ()=>{
         
@@ -173,6 +179,8 @@ describe('integrations', ()=>{
     })
     it('correctly shows errors when password and macaroon are entered but does not connect', ()=>{
         fetch.mockReject(new Error('error happened'))
+        //fetch.mockResponse(JSON.stringify("fail"), { status: 401, ok: false })
+        //fetch.mockReject(()=>Promise.reject('error happened'))
         const app=mount(
             <Provider store={store}>
                 <Router>
